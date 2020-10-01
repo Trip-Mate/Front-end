@@ -2,21 +2,20 @@ import React, { useState } from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControl, InputLabel } from '@material-ui/core';
+import { FormControl, InputLabel, TextField } from '@material-ui/core';
 
 const registerValues = {
-	id: 0,
-	fullName: '',
-	mobile: '',
-	city: '',
-	registerDate: new Date(),
+	name: '',
+	email: '',
+	password: ''
 };
 
 const Register = () => {
-	const [registerValues, setregisterValues] = useState();
+	const [newUser, setnewUser] = useState(registerValues);
 
 	const useStyles = makeStyles((theme) => ({
-		root: {
+		form: {
+			width: '80%',
 			direction: 'column',
 			justify: 'center',
 			alignItems: 'center',
@@ -30,20 +29,40 @@ const Register = () => {
 		},
 	}));
 	const classes = useStyles();
-
-	return (
+	
+	const RegisterForm = () => (
 		<div>
-			<FormControl className={classes.root}>
-				<InputLabel className={classes.label} htmlFor='my-input'>
-					Email address
-				</InputLabel>
-				{/* Rob, for the user to be able to register we only need name, email
-					and the password to be sent to the back-end, nothing else needed for
-                    now. Of course you have to make two password fields and validate them if they match.
-                    If you have any questions just write me on discord.*/}
+			<FormControl className={classes.form}>
+				<TextField variant="outlined"
+				label="Email"
+				value={newUser.email}
+				/>
+				 <TextField variant="outlined"
+				label="Full Name"
+				value={newUser.name}
+				/>
+				 <TextField variant="outlined"
+				label="Password"
+				value={newUser.password}
+				/>
 			</FormControl>
 		</div>
-	);
-};
+		)
+		return (
+			<div>
+			<h1>
+				Hello world
+			</h1>
+				<RegisterForm />
+			</div>
+		);
+	};
+	Register.propTypes = {
+		/**
+		 * Injected by the documentation to work in an iframe.
+		 * You won't need it on your project.
+		 */
+		window: Register.func,
+	};
 
 export default Register;

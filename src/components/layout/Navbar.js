@@ -1,5 +1,5 @@
 import React from 'react';
-import Register from '../Register/register';
+import {BrowserRouter as Router, NavLink } from "react-router-dom";
 import PropTypes from 'prop-types';
 
 // Material Imports
@@ -74,6 +74,7 @@ function ResponsiveDrawer(props) {
 		setMobileOpen(!mobileOpen);
 	};
 
+
 	const drawer = (
 		<div>
 			<div className={classes.toolbar} />
@@ -89,8 +90,10 @@ function ResponsiveDrawer(props) {
 					<ListItemIcon>
 						<PersonAddIcon />
 					</ListItemIcon>
-					<ListItemText primary={'Register'} />
-				</ListItem>
+					<Router>
+						<NavLink to="/register"> <ListItemText primary={'Register'} /> </NavLink>
+					</Router>
+				  </ListItem>
 			</List>
 			<Divider />
 			<ListItem button key={'home'}>
@@ -119,6 +122,7 @@ function ResponsiveDrawer(props) {
 			</ListItem>
 		</div>
 	);
+
 
 	const container =
 		window !== undefined ? () => window().document.body : undefined;
