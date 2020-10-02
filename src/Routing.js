@@ -8,6 +8,8 @@ import Register from './Pages/Website/User/Register/Register';
 import Login from './Pages/Website/User/Login/Login';
 import Forgot from './Pages/Website/User/Forgot/Forgot';
 import Reset from './Pages/Website/User/Reset/Reset';
+import Overview from './Pages/App/Overview/Overview';
+
 
 
 export const HomeRoute = '/';
@@ -18,6 +20,7 @@ export const RegisterRoute = '/register';
 export const LoginRoute = '/login';
 export const ForgotRoute = '/forgot';
 export const ResetRoute = '/reset';
+export const OverviewRoute = '/overview'
 
 
 function Routing() {
@@ -31,6 +34,7 @@ function Routing() {
 			<Route path={LoginRoute} exact component={Login} />
 			<Route path={ForgotRoute} exact component={Forgot} />
 			<Route path={ResetRoute} exact component={Reset} />
+			<Route path={OverviewRoute} exact component={Overview} />
 		</div>
 	);
 }
