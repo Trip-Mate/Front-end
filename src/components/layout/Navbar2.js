@@ -1,14 +1,21 @@
 import React from 'react';
+
+// React Router + utils
+import { HomeRoute, FeaturesRoute, DocsRoute, ContactRoute, LoginRoute, RegisterRoute } from '../../Routing';
+import { Link } from 'react-router-dom';
+
+// Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+import {
+	AppBar,
+	Toolbar,
+	Typography,
+	IconButton,
+	MenuItem,
+	Menu,
+} from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Link from '@material-ui/core/Link';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -26,8 +33,6 @@ export default function MenuAppBar() {
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [anchorEl2, setAnchorEl2] = React.useState(null);
-
-	const preventDefault = (event) => event.preventDefault();
 
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -58,10 +63,18 @@ export default function MenuAppBar() {
 						open={Boolean(anchorEl)}
 						onClose={() => setAnchorEl(null)}
 					>
-            <MenuItem onClick={handleClose}>Home</MenuItem>
-						<MenuItem onClick={handleClose}>Features</MenuItem>
-						<MenuItem onClick={handleClose}>Docs</MenuItem>
-						<MenuItem onClick={handleClose}>Contact</MenuItem>
+						<MenuItem onClick={handleClose} component={Link} to={HomeRoute}>
+							Home
+						</MenuItem>
+						<MenuItem onClick={handleClose} component={Link} to={FeaturesRoute}>
+							Features
+						</MenuItem>
+						<MenuItem onClick={handleClose} component={Link} to={DocsRoute}>
+							Docs
+						</MenuItem>
+						<MenuItem onClick={handleClose} component={Link} to={ContactRoute}>
+							Contact
+						</MenuItem>
 					</Menu>
 
 					<Typography variant='h6' className={classes.title}>
@@ -92,8 +105,16 @@ export default function MenuAppBar() {
 							open={Boolean(anchorEl2)}
 							onClose={() => setAnchorEl2(null)}
 						>
-							<MenuItem onClick={handleClose}>Login</MenuItem>
-							<MenuItem onClick={handleClose}>Register</MenuItem>
+							<MenuItem onClick={handleClose} component={Link} to={LoginRoute}>
+								Login
+							</MenuItem>
+							<MenuItem
+								onClick={handleClose}
+								component={Link}
+								to={RegisterRoute}
+							>
+								Register
+							</MenuItem>
 						</Menu>
 					</div>
 				</Toolbar>

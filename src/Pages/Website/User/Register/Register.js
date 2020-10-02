@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControl, InputLabel, TextField } from '@material-ui/core';
+import {
+	FormControl,
+	InputLabel,
+	TextField,
+	Typography,
+} from '@material-ui/core';
+
+// React Router + utils
+import { ForgotRoute } from '../../../../Routing'
+import { Link } from 'react-router-dom';
 
 const registerValues = {
 	name: '',
@@ -15,6 +24,7 @@ const Register = () => {
 
 	const useStyles = makeStyles((theme) => ({
 		form: {
+			marginTop: '20px',
 			width: '80%',
 			direction: 'column',
 			justify: 'center',
@@ -31,28 +41,31 @@ const Register = () => {
 	const classes = useStyles();
 	
 	const RegisterForm = () => (
-		<div>
+		<Fragment>
 			<FormControl className={classes.form}>
-				<TextField variant="outlined"
-				label="Email"
-				value={newUser.email}
-				/>
-				 <TextField variant="outlined"
-				label="Full Name"
-				value={newUser.name}
-				/>
-				 <TextField variant="outlined"
-				label="Password"
-				value={newUser.password}
+				<TextField variant='outlined' label='Email' value={newUser.email} />
+				<TextField variant='outlined' label='Full Name' value={newUser.name} />
+				<TextField
+					variant='outlined'
+					label='Password'
+					value={newUser.password}
 				/>
 			</FormControl>
-		</div>
-		)
+			<div>
+				<Typography
+					variant='body2'
+					color='initial'
+					component={Link}
+					to={ForgotRoute}
+				>
+					Frogot Password
+				</Typography>
+			</div>
+		</Fragment>
+	);
+	
 		return (
 			<div>
-			<h1>
-				Hello world
-			</h1>
 				<RegisterForm />
 			</div>
 		);
