@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import Navbar from './components/layout/Navbar';
+import Navbar2 from './components/layout/Navbar2';
 import Register from './components/Register/register'
 import {BrowserRouter as Router, Route} from "react-router-dom";
 
@@ -24,7 +24,8 @@ const links = (
 const App = () => (
 	<Fragment>
 		<CssBaseline />
-		<Navbar />
+		<Navbar2/>
+		<Register />
 	</Fragment>
 );
 
