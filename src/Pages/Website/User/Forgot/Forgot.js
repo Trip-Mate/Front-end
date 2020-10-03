@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -9,6 +9,9 @@ import { DevTool } from '@hookform/devtools';
 /* Axios */
 import API from '../../../../api';
 
+// Router
+import { LoginRoute } from '../../../../Routing';
+
 /* Material UI core*/
 import {
 	Avatar,
@@ -18,6 +21,7 @@ import {
 	makeStyles,
   Container,
 } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 /* Material UI icons */
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
@@ -28,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(8),
 		display: 'flex',
 		flexDirection: 'column',
-    alignItems: 'center',
-    textAlign: 'center'
+		alignItems: 'center',
+		textAlign: 'center',
 	},
 	avatar: {
 		margin: theme.spacing(1),
@@ -49,7 +53,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Forgot() {
+function Forgot(props) {
+
+	const [isSuccess, setIsSuccess] = useState(false);
 
   const { register, errors, handleSubmit, control } = useForm({
 		mode: 'onChange',
@@ -59,9 +65,22 @@ function Forgot() {
 		},
 	});
 
-  const classes = useStyles();
+	const classes = useStyles();
 
-  const onSubmit = (email) => API.post('/users/forgot', { user: email});
+	const onSubmit = async (email) => {
+
+		try {
+			const res = await API.post('/users/forgot', { user: email });
+			if (res) {
+				setIsSuccess(true);
+				setTimeout(() => {
+					props.history.push(LoginRoute);
+				}, 2000);
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	};
 
   return (
 		<Container component='main' maxWidth='xs'>
@@ -75,11 +94,11 @@ function Forgot() {
 
 				{/* Title */}
 				<Typography component='h1' variant='h5'>
-          Forgot Password
+					Forgot Password
 				</Typography>
-        {/* Linebreak */}
-        <hr className={classes.lineBreak} />
-        {/* Description */}
+				{/* Linebreak */}
+				<hr className={classes.lineBreak} />
+				{/* Description */}
 				<Typography paragraph>
 					Please enter your email address in order to send you a password reset
 					link.
@@ -91,23 +110,29 @@ function Forgot() {
 					onSubmit={handleSubmit(onSubmit)}
 				>
 					{/* Email */}
-					<TextField
-						variant='outlined'
-						margin='normal'
-						inputRef={register({
-							required: 'Required',
-							pattern: {
-								value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-								message: 'Invalid email address',
-							},
-						})}
-						fullWidth
-						id='email'
-						label='Email Address'
-						type='email'
-						name='email'
-						error={!!errors.email}
-					/>
+					{!isSuccess ? (
+						<TextField
+							variant='outlined'
+							margin='normal'
+							inputRef={register({
+								required: 'Required',
+								pattern: {
+									value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+									message: 'Invalid email address',
+								},
+							})}
+							fullWidth
+							id='email'
+							label='Email Address'
+							type='email'
+							name='email'
+							error={!!errors.email}
+						/>
+					) : (
+						<Alert severity='success'>
+							Email has been sent!
+						</Alert>
+					)}
 					{errors.email && errors.email.message}
 					<Button
 						type='submit'
