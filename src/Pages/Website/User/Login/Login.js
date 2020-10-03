@@ -12,10 +12,8 @@ import { DevTool } from '@hookform/devtools';
 import axios from 'axios';
 /* Material UI core*/
 import {
-<<<<<<< HEAD
   Avatar,
   Button,
-  CssBaseline,
   TextField,
   FormControlLabel,
   Checkbox,
@@ -24,18 +22,6 @@ import {
   Typography,
   makeStyles,
   Container,
-=======
-	Avatar,
-	Button,
-	TextField,
-	FormControlLabel,
-	Checkbox,
-	Link,
-	Grid,
-	Typography,
-	makeStyles,
-	Container,
->>>>>>> 2a16e018224493cf6e7f90b3b21b5526c72f12c1
 } from '@material-ui/core';
 
 /* Material UI icons */
@@ -63,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function LogIn() {
-<<<<<<< HEAD
   const { register, errors, handleSubmit, control } = useForm({
     mode: 'onChange',
     reValidateMode: 'onChange',
@@ -77,8 +62,8 @@ function LogIn() {
 
   const onSubmit = async (values) => {
     console.log(values);
-    const response = await axios.post('/auth', values);
-    console.log(response.data);
+    const { data } = await axios.post('/auth', values);
+    console.log(data);
   };
 
   return (
@@ -144,85 +129,6 @@ function LogIn() {
           {/* Remember me */}
 
           {/* <FormControlLabel
-=======
-	
-	const { register, errors, handleSubmit, control } = useForm({
-		mode: 'onChange',
-		reValidateMode: 'onChange',
-		defaultValues: {
-			email: '',
-			password: '',
-		},
-	});
-
-	const classes = useStyles();
-
-	const onSubmit = (values) => console.log(values);
-
-	return (
-		<Container component='main' maxWidth='xs'>
-			<DevTool control={control} />
-
-			<div className={classes.paper}>
-				{/* Icon */}
-				<Avatar className={classes.avatar}>
-					<LockOutlinedIcon />
-				</Avatar>
-
-				{/* Title */}
-				<Typography component='h1' variant='h5'>
-					Sign in
-				</Typography>
-
-				<form
-					className={classes.form}
-					noValidate
-					onSubmit={handleSubmit(onSubmit)}
-				>
-					{/* Email */}
-					<TextField
-						variant='outlined'
-						margin='normal'
-						inputRef={register({
-							required: 'Required',
-							pattern: {
-								value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-								message: 'Invalid email address',
-							},
-						})}
-						fullWidth
-						id='email'
-						label='Email Address'
-						type='email'
-						name='email'
-						error={!!errors.email}
-					/>
-					{errors.email && errors.email.message}
-
-					{/* Password */}
-					<TextField
-						variant='outlined'
-						margin='normal'
-						inputRef={register({
-							required: 'Required',
-							pattern: {
-								value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-								message: 'Please include at least 1 character and 1 number',
-							},
-						})}
-						fullWidth
-						name='password'
-						label='Password'
-						type='password'
-						id='password'
-						error={!!errors.password}
-					/>
-					{errors.password && errors.password.message}
-
-					{/* Remember me */}
-
-					{/* <FormControlLabel
->>>>>>> 2a16e018224493cf6e7f90b3b21b5526c72f12c1
             control={
               <Controller as={Checkbox} control={control} name="remember" color="primary" defaultValue={false}/>}
             label="Remember me"
