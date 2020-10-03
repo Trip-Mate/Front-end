@@ -52,7 +52,7 @@ const Register = () => {
 				/>
 			</FormControl>
 			<div>
-				<Link href={LoginRoute} variant='body2'>
+				<Link to={LoginRoute} variant='body2'>
 					Already have an accout? Login
 				</Link>
 			</div>
