@@ -1,35 +1,39 @@
-import React, { useState, Fragment, useRef, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
+
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	Button,
 	FormControl,
+	Typography,
 	TextField,
+    Avatar,
 } from '@material-ui/core';
+
+// Icons
 import LockIcon from '@material-ui/icons/Lock';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import EmailIcon from '@material-ui/icons/Email';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
 // React Router + utils
 import { ForgotRoute } from '../../../../Routing'
 import { Link } from 'react-router-dom';
 import { blue } from '@material-ui/core/colors';
-// import { LoginRoute} from '../../../../Routing'
+// import { LoginRoute } from '../../../../Routing'
 
-const register = {
-	name: '',
-	email: '',
-	password: ''
-};
+// Styles 
 const useStyles = makeStyles((theme) => ({
 	form: {
 		marginTop: '20px',
-		width: '100%',
+		width: '80%',
+		display: 'grid',
 		direction: 'column',
 		justify: 'center',
 		alignItems: 'center',
+		margin: 'auto',
 	},
 	label: {
 		padding: theme.spacing(2),
@@ -38,113 +42,135 @@ const useStyles = makeStyles((theme) => ({
 		maxWidth: '60%',
 		background: 'transparent',
 	},
-	margin: {
-		margin: '5px'
-	}, 
-	
+	h1: {
+		justify: 'center',
+		alignItems: 'center',
+		textAlign: 'center',
+	},
+	Avater: {
+		margin: theme.spacing(1),
+		 backgroundColor: theme.palette.secondary.main,
+		 justify: 'center',
+		alignItems: 'center',
+		margin: ' 20px auto auto auto',
+		fontSize: 'large',
+	},
 }));
 
-const Register = (props) => {
+const RegisterForm = ( ) => { 
+	
+	const [newUser, SetNewUser] = useState({  
+		email: '',
+		username: '',
+		password: ''
+	
+	})
 
-	const [newUser, setNewUser] = useState();
-	const [email, setEmail] = useState(newUser);
-	const firstRender = useRef(true);
-	const [disable, setDisabled] = useState(true);
-	const [nameError, setNameError] = useState(null);
+	const user = {
+		email: newUser.email,
+		username: newUser.username,
+		password: newUser.password
+	}
+	const submitValue = async () => {
+		fetch('http://localhost:5000/user/register', {
+		method: 'post', 
+		headers: {'Content-Type' : 'application/json' },
+		body: JSON.stringify({user})
+			})
+			.catch(err => console.log(user))
+		
+		};
+	
 	const classes = useStyles();
 	
-	// const SubmitForm = () => {
-	// 	setNewUser(newUser);
-	// }
-	
-  const handleInputChange = e => {
-		const {email, value } = e.target	
-}
-	
-	useEffect(() => {
-		if (firstRender.current) {
-			firstRender.current = false
-			return
-		}setNewUser({
-			...newUser,
-			 [email]: value,
-	})
-		console.log(newUser)
-	})
-
-	  const handleSave = () => {
-		console.log(newUser) 
-	  }
-	   
-	const RegisterForm = ( ) => (
-		<Fragment  >
-			<FormControl 
+	return ( 
+	<Fragment  >
 		
-			className={classes.form}
-			autoComplete="off">
-				<TextField 
-					    className={classes.margin}
-						variant='outlined' 
-						label='Email'
-						onChange  = { e => setEmail(setNewUser) }
-						InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-								<EmailIcon />
-								</InputAdornment>
-								),
-        					}} /> 		
-				<TextField 
-						className={classes.margin}
-						variant='outlined' 
-						label='Full Name'
-						name='name' 
+		<Avatar className={classes.Avater}>
+								<AssignmentIndIcon  />
+						</Avatar>
+
+			<h1 className={classes.h1}>Please Register Below</h1>	
+				 {/* form  */}
+				<form className={classes.form} >
+				{/* Email */}
+						<TextField 
+							error
+							variant='outlined' 
+							margin='normal'
+							label='Email Address'
+							value={newUser.email}
+							onChange={(e) => SetNewUser(e.target.value)} 
+							
 							InputProps={{
 							startAdornment: (
 								<InputAdornment position="start">
-								<AccountCircleIcon />
+								<EmailIcon color='secondary'/>
 								</InputAdornment>
 								),
         					}}/>
+				{/*username  */}
+				<TextField 
+							margin='normal'
+							variant='outlined' 
+							label='Username'
+							name='username' 
+							value={newUser.username}
+							onChange={(e) => SetNewUser(e.target.value)} 
+							InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+								<AccountCircleIcon color='secondary' />
+								</InputAdornment>
+								),
+        					}}/>
+				{/* Password */}
 				<TextField
-						className={classes.margin}
-						variant='outlined' 
-						label='Password' 
-						InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">
-							<LockIcon />
-							</InputAdornment>
-          				),
-    			    }}
-					/>
-			</FormControl>
-			{ nameError && <p>{nameError}</p> }
-				<Button	
-					 type="submit" 
-					
-					variant="contained"
-					color='secondary'
-					onClick={handleSave }
-				>
-						Register
-     		 		</Button>
-			{/* <div>
-			{/* This is for the Login */}
-				{/* <Typography
-					variant='body2'
-					color='initial'
-					component={Link}
-					to={ForgotRoute}
-				>
-					Forgot Password
-				</Typography> 
-				</div> */}
-				
-		
-		</Fragment>
-	);	
+							error
+							margin='normal'
+							variant='outlined' 
+							label='Password' 
+							name="password"
+							value={newUser.password}
+							onChange={(e) => SetNewUser(e.target.value)} 
+							
+							InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+								<LockIcon color='secondary' />
+								</InputAdornment>
+          						),
+    			   		 }}/>
+					<Button	 	
+						// component={Link} to={}
+						onClick={submitValue}
+						
+						variant='contained'
+						color='secondary'
+						className={classes.Avater}
+					>	Register</Button>
+		</form>
 	
+					
+		<div>
+		
+			 <Typography
+				variant='body2'
+				color='initial'
+				component={Link}
+				to={ForgotRoute}
+			>
+				Forgot Password
+			</Typography> 
+			</div>
+			
+	
+	</Fragment>
+);	
+		}
+
+const Register = (props) => {
+	    
 		return (
 			<div>
 				<RegisterForm />
