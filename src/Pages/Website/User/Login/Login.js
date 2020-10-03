@@ -66,8 +66,6 @@ function LogIn() {
 		<Container component='main' maxWidth='xs'>
 			<DevTool control={control} />
 
-			<CssBaseline />
-
 			<div className={classes.paper}>
 				{/* Icon */}
 				<Avatar className={classes.avatar}>

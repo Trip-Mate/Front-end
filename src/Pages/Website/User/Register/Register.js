@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 
 // React Router + utils
-import { ForgotRoute } from '../../../../Routing'
+import { LoginRoute } from '../../../../Routing'
 import { Link } from 'react-router-dom';
 
 const registerValues = {
@@ -52,14 +52,9 @@ const Register = () => {
 				/>
 			</FormControl>
 			<div>
-				<Typography
-					variant='body2'
-					color='initial'
-					component={Link}
-					to={ForgotRoute}
-				>
-					Frogot Password
-				</Typography>
+				<Link href={LoginRoute} variant='body2'>
+					Already have an accout? Login
+				</Link>
 			</div>
 		</Fragment>
 	);
