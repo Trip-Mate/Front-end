@@ -68,9 +68,9 @@ function Reset(props) {
 
 	const classes = useStyles();
 
-	const onSubmit = async () => {
+	const onSubmit = async (passwords) => {
 		try {
-			const res = await API.post('/users/reset', { resetPasswordToken: props.match.resetPasswordToken });
+			const res = await API.post('/users/reset', { resetPasswordToken: props.match.params.resetPasswordToken, password: passwords.password  });
 			if (res) {
 				setIsSuccess(true);
 				setTimeout(() => {
@@ -88,6 +88,11 @@ function Reset(props) {
 
 			<div className={classes.paper}>
 				{/* Icon */}
+				{isSuccess ? (
+						<Alert severity='success'>
+							Password has been reset!
+						</Alert>
+				) : null}
 				<Avatar className={classes.avatar}>
 					<VpnKeyOutlinedIcon />
 				</Avatar>
