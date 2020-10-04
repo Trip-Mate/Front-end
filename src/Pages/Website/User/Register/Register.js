@@ -1,5 +1,7 @@
 import React, { useState, Fragment } from 'react';
 
+/* React Hook Form */
+import { useForm } from 'react-hook-form';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -71,15 +73,13 @@ const RegisterForm = ( ) => {
 		username: newUser.username,
 		password: newUser.password
 	}
-	const submitValue = async () => {
-		fetch('http://localhost:5000/user/register', {
-		method: 'post', 
-		headers: {'Content-Type' : 'application/json' },
-		body: JSON.stringify({user})
-			})
-			.catch(err => console.log(user))
-		
-		};
+	const onSubmit = async (values) => {
+		console.log(values);
+		const {data} = await axios.post('/auth', { ...values});
+		console.log(data);
+	  };
+	
+
 	
 	const classes = useStyles();
 	
@@ -143,7 +143,7 @@ const RegisterForm = ( ) => {
     			   		 }}/>
 					<Button	 	
 						// component={Link} to={}
-						onClick={submitValue}
+						onClick={onSubmit}
 						
 						variant='contained'
 						color='secondary'
