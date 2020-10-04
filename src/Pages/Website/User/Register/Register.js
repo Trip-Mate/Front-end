@@ -92,7 +92,8 @@ const RegisterForm = ( ) => {
 
 			<h1 className={classes.h1}>Please Register Below</h1>	
 				 {/* form  */}
-				<form className={classes.form} >
+				<form className={classes.form} 
+				onSubmit={handleSubmit(onSubmit)}>
 				{/* Email */}
 						<TextField 
 							error
