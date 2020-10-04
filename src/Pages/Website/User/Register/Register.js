@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React from 'react';
 import axios from 'axios';
 
 /* React Hook Form */
@@ -9,7 +9,6 @@ import { useForm } from 'react-hook-form';
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	Button,
-	FormControl,
 	Typography,
 	TextField,
 	Avatar,
@@ -53,19 +52,19 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		textAlign: 'center',
 	},
-	Avater: {
+	avater: {
 		margin: theme.spacing(1),
 		 backgroundColor: theme.palette.secondary.main,
+		 display: 'grid',
+		 left: '50%' ,
 		 justify: 'center',
-		alignItems: 'center',
-		margin: ' 20px auto auto auto',
 		fontSize: 'large',
 	},
 }));
 
 const RegisterForm = ( props) => { 
 	
-	const { register, errors, handleSubmit, control } = useForm({
+	const { register, errors, handleSubmit } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
 		defaultValues: {
@@ -78,7 +77,7 @@ const RegisterForm = ( props) => {
 
 	const onSubmit = async (email, password, username) => {
 	    try {
-			const res = await axios.post('/users/register', { user: email, password, username });
+			const res = await axios.post('/user/register', { user: email, password, username });
 			if (res) {
 			  setTimeout(() => {
 				props.history.push(OverviewRoute);
@@ -96,18 +95,16 @@ const RegisterForm = ( props) => {
 	return ( 
 	<Container maxWidth='xs' component='main' >
 
-	
-	
-		<Avatar className={classes.Avater}>
-								<AssignmentIndIcon  />
-						</Avatar>
-
-			<h1 className={classes.h1}>Please Register Below</h1>	
-				 {/* form  */}
-			
-				<form className={classes.form} 
+				<Avatar className={classes.avater}>
+						<AssignmentIndIcon  />
+				</Avatar>
+					<h1 className={classes.h1}>Please Register Below</h1>	
+							 {/* form  */}
+					<form className={classes.form} 
 				   onSubmit={handleSubmit(onSubmit)} >
-				{/* Email */}
+			
+			
+						{/* Email */}
 						<TextField 
 							id='email'
 							label='Email Address'
@@ -134,8 +131,8 @@ const RegisterForm = ( props) => {
 							error={!!errors.email}
 							/>
 							  {errors.email && errors.email.message}
-				{/*username  */}
-				<TextField 
+					{/*username  */}
+					<TextField 
 							fullWidth	
 							margin='normal'
 							variant='outlined' 
@@ -153,8 +150,8 @@ const RegisterForm = ( props) => {
 							/>
 							{errors.username && errors.username.message}
 
-				{/* Password */}
-				<TextField
+					{/* Password */}
+					<TextField
 							
 							margin='normal'
 							variant='outlined' 
