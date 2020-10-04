@@ -155,6 +155,7 @@ const RegisterForm = ( props) => {
 							
 							margin='normal'
 							variant='outlined' 
+							type='password'
 							label='Password' 
 							name="password"
 							inputRef={register({
@@ -174,6 +175,34 @@ const RegisterForm = ( props) => {
 							error={!!errors.password}
 							/>
 							      {errors.password && errors.password.message}
+						{/* Re-enter password */}
+						 <TextField	
+							margin='normal'
+							variant='outlined' 
+							type='password'
+							label='Re-enter password' 
+							name="reEnterPassword"
+							inputRef={register({
+								required: 'Required',
+								pattern: {
+								value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+								message: 'Please re-enter your password',
+								},
+								})}
+							InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+								<LockIcon color='secondary' />
+								</InputAdornment>
+          						),
+    			   		 }}
+							error={!!errors.reEnterPassword}
+							/>
+							      {errors.reEnterPassword && errors.reEnterPassword.message}
+					
+					
+					
+					
 					<Button	 	
 						component={Link} to={OverviewRoute}
 						margin='normal'
