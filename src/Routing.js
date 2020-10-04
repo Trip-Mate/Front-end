@@ -20,8 +20,8 @@ export const ContactRoute = '/contact';
 export const RegisterRoute = '/register';
 export const LoginRoute = '/login';
 export const ForgotRoute = '/forgot';
-export const ResetRoute = '/reset';
-export const OverviewRoute = '/overview';
+export const ResetRoute = '/reset/:resetPasswordToken';
+export const OverviewRoute = '/overview'
 
 function Routing() {
   return (
