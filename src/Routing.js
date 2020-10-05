@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, withRouter } from 'react-router-dom';
-import Home from './Pages/Website/Home/Home';
-import Features from './Pages/Website/Features/Features';
-import Docs from './Pages/Website/Docs/Docs';
-import Contact from './Pages/Website/Contact/Contact';
-import Register from './Pages/Website/User/Register/Register';
-import Login from './Pages/Website/User/Login/Login';
-import Forgot from './Pages/Website/User/Forgot/Forgot';
-import Reset from './Pages/Website/User/Reset/Reset';
-import Overview from './Pages/App/Overview/Overview';
+import Home from './pages/Website/Home/Home';
+import Features from './pages/Website/Features/Features';
+import Docs from './pages/Website/Docs/Docs';
+import Contact from './pages/Website/Contact/Contact';
+import Register from './pages/Website/User/Register/Register';
+import Login from './pages/Website/User/Login/Login';
+import Forgot from './pages/Website/User/Forgot/Forgot';
+import Reset from './pages/Website/User/Reset/Reset';
+import Overview from './pages/App/Overview/Overview';
 
 
 

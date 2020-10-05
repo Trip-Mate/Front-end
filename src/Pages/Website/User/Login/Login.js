@@ -24,6 +24,9 @@ import {
 	Container,
 } from '@material-ui/core';
 
+/* Error Messages */
+import Alert from '@material-ui/lab/Alert';
+
 /* Material UI icons */
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
@@ -100,7 +103,7 @@ function LogIn() {
 						name='email'
 						error={!!errors.email}
 					/>
-					{errors.email && errors.email.message}
+					{errors.email && <Alert severity="error">{errors.email.message}</Alert>}
 
 					{/* Password */}
 					<TextField
@@ -120,7 +123,7 @@ function LogIn() {
 						id='password'
 						error={!!errors.password}
 					/>
-					{errors.password && errors.password.message}
+					{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
 
 					{/* Remember me */}
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -21,6 +21,8 @@ import {
 	makeStyles,
 	Container,
 } from '@material-ui/core';
+
+/* Error Messages */
 import Alert from '@material-ui/lab/Alert';
 
 /* Material UI icons */
@@ -57,7 +59,7 @@ function Reset(props) {
   // console.log(props.match)
 	const [isSuccess, setIsSuccess] = useState(false);
 
-	const { register, errors, handleSubmit, control } = useForm({
+	const { register, errors, handleSubmit, control, watch } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
 		defaultValues: {
@@ -65,6 +67,10 @@ function Reset(props) {
 			password2: '',
 		},
 	});
+
+	/* Keeps track of the password value */
+	const password = useRef({});
+	password.current = watch("password", "");
 
 	const classes = useStyles();
 
@@ -131,18 +137,16 @@ function Reset(props) {
 						id='password'
 						error={!!errors.password}
 					/>
-					{errors.password && errors.password.message}
+					{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
+					
 					{/* Password 2*/}
 					<TextField
 						variant='outlined'
 						margin='normal'
 						inputRef={register({
-							required: 'Required',
-							pattern: {
-								value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-								message: 'Please include at least 1 character and 1 number',
-							},
-						})}
+							validate: value =>
+							  value === password.current || "The passwords do not match"
+						  })}
 						fullWidth
 						name='password2'
 						label='Password Confirm'
@@ -150,14 +154,14 @@ function Reset(props) {
 						id='password2'
 						error={!!errors.password2}
 					/>
-					{errors.password2 && errors.password2.message}
+					{errors.password2 && <Alert severity="error">{errors.password2.message}</Alert>}
 					<Button
 						type='submit'
 						fullWidth
 						variant='contained'
 						color='primary'
 						className={classes.submit}
-						disabled={!!errors.password && !!errors.password2}
+						disabled={!!errors.password || !!errors.password2}
 					>
 						Reset Password
 					</Button>
