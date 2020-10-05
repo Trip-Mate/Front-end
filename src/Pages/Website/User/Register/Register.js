@@ -1,41 +1,45 @@
 import React from 'react';
 import axios from 'axios';
 
+// React Router + utils
+import { ForgotRoute, OverviewRoute, LoginRoute } from '../../../../Routing';
+
+/* React Hook Form */
+import { useForm } from 'react-hook-form';
+
+/* React Hook Form DevTools to help debug forms with validation. */
+import { DevTool } from '@hookform/devtools';
 
 // Material-UI
-import { makeStyles } from '@material-ui/core/styles';
 import {
 	Button,
-	FormControl,
-	Typography,
 	TextField,
-    Avatar,
+	Avatar,
+	Container,
+	Grid,
+	Link,
+	makeStyles,
+	InputAdornment,
 } from '@material-ui/core';
 
 // Icons
 import LockIcon from '@material-ui/icons/Lock';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import EmailIcon from '@material-ui/icons/Email';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 
-// React Router + utils
-import { ForgotRoute } from '../../../../Routing'
-import { Link } from 'react-router-dom';
-import { blue } from '@material-ui/core/colors';
-// import { LoginRoute } from '../../../../Routing'
-
-// Styles 
+// Styles
 const useStyles = makeStyles((theme) => ({
 	form: {
 		marginTop: '20px',
-		width: '80%',
 		display: 'grid',
+		width: '100%',
 		direction: 'column',
 		justify: 'center',
 		alignItems: 'center',
 		margin: 'auto',
 	},
+
 	label: {
 		padding: theme.spacing(2),
 		textAlign: 'center',
@@ -48,136 +52,185 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		textAlign: 'center',
 	},
-	Avater: {
+	avater: {
 		margin: theme.spacing(1),
-		 backgroundColor: theme.palette.secondary.main,
-		 justify: 'center',
-		alignItems: 'center',
-		margin: ' 20px auto auto auto',
+		backgroundColor: theme.palette.secondary.main,
+		display: 'grid',
+		left: '50%',
+		justify: 'center',
 		fontSize: 'large',
+		transform: 'translateX(-50%)'
 	},
 }));
 
-const RegisterForm = ( ) => { 
-	
-	const [newUser, SetNewUser] = useState({  
-		email: '',
-		username: '',
-		password: ''
-	
-	})
+const Register = (props) => {
+	const { register, errors, handleSubmit, control } = useForm({
+		mode: 'onChange',
+		reValidateMode: 'onChange',
+		defaultValues: {
+			email: '',
+			username: '',
+			password: '',
+			password2: '',
+		},
+	});
 
-	const user = {
-		email: newUser.email,
-		username: newUser.username,
-		password: newUser.password
-	}
-	const submitValue = async () => {
-		fetch('http://localhost:5000/user/register', {
-		method: 'post', 
-		headers: {'Content-Type' : 'application/json' },
-		body: JSON.stringify({user})
-			})
-			.catch(err => console.log(user))
-		
-		};
-	
+	const onSubmit = async (user) => {
+		try {
+			const res = await axios.post('/users', user);
+			if (res) {
+					props.history.push(OverviewRoute);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const classes = useStyles();
-	
-	return ( 
-	<Fragment  >
-		
-		<Avatar className={classes.Avater}>
-								<AssignmentIndIcon  />
-						</Avatar>
 
-			<h1 className={classes.h1}>Please Register Below</h1>	
-				 {/* form  */}
-				<form className={classes.form} 
-				onSubmit={handleSubmit(onSubmit)}>
+	return (
+		<Container maxWidth='xs' component='main'>
+			<DevTool control={control} />
+			<Avatar className={classes.avater}>
+				<AssignmentIndIcon />
+			</Avatar>
+			<h1 className={classes.h1}>Please Register Below</h1>
+			{/* form  */}
+			<form
+				className={classes.form}
+				noValidate
+				onSubmit={handleSubmit(onSubmit)}
+			>
 				{/* Email */}
-						<TextField 
-							error
-							variant='outlined' 
-							margin='normal'
-							label='Email Address'
-							value={newUser.email}
-							onChange={(e) => SetNewUser(e.target.value)} 
-							
-							InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
-								<EmailIcon color='secondary'/>
-								</InputAdornment>
-								),
-        					}}/>
+				<TextField
+					id='email'
+					label='Email Address'
+					type='email'
+					name='email'
+					variant='outlined'
+					margin='normal'
+					fullWidth
+					inputRef={register({
+						required: 'Required',
+						pattern: {
+							value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+							message: 'Invalid email address',
+						},
+					})}
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<EmailIcon color='secondary' />
+							</InputAdornment>
+						),
+					}}
+					error={!!errors.email}
+				/>
+				{errors.email && errors.email.message}
 				{/*username  */}
-				<TextField 
-							margin='normal'
-							variant='outlined' 
-							label='Username'
-							name='username' 
-							value={newUser.username}
-							onChange={(e) => SetNewUser(e.target.value)} 
-							InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
+				<TextField
+					fullWidth
+					margin='normal'
+					variant='outlined'
+					label='Username'
+					name='name'
+					inputRef={register({
+						required: 'Required',
+					})}
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
 								<AccountCircleIcon color='secondary' />
-								</InputAdornment>
-								),
-        					}}/>
+							</InputAdornment>
+						),
+					}}
+					error={!!errors.name}
+				/>
+				{errors.name && errors.name.message}
+
 				{/* Password */}
 				<TextField
-							error
-							margin='normal'
-							variant='outlined' 
-							label='Password' 
-							name="password"
-							value={newUser.password}
-							onChange={(e) => SetNewUser(e.target.value)} 
-							
-							InputProps={{
-							startAdornment: (
-								<InputAdornment position="start">
+					margin='normal'
+					variant='outlined'
+					type='password'
+					label='Password'
+					name='password'
+					inputRef={register({
+						required: 'Required',
+						pattern: {
+							value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+							message: 'Please include at least 1 character and 1 number',
+						},
+					})}
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
 								<LockIcon color='secondary' />
-								</InputAdornment>
-          						),
-    			   		 }}/>
-					<Button	 	
-						// component={Link} to={}
-						onClick={submitValue}
-						
-						variant='contained'
-						color='secondary'
-						className={classes.Avater}
-					>	Register</Button>
-		</form>
-	
-					
-		<div>
-		
-			 <Typography
-				variant='body2'
-				color='initial'
-				component={Link}
-				to={ForgotRoute}
-			>
-				Forgot Password
-			</Typography> 
-			</div>
-			
-	
-	</Fragment>
-);	
-		}
+							</InputAdornment>
+						),
+					}}
+					error={!!errors.password}
+				/>
+				{errors.password && errors.password.message}
+				{/* Re-enter password */}
+				<TextField
+					margin='normal'
+					variant='outlined'
+					type='password'
+					label='Re-enter password'
+					name='reEnterPassword'
+					inputRef={register({
+						required: 'Required',
+						pattern: {
+							value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+							message: 'Please re-enter your password',
+						},
+					})}
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<LockIcon color='secondary' />
+							</InputAdornment>
+						),
+					}}
+					error={!!errors.reEnterPassword}
+				/>
+				{errors.reEnterPassword && errors.reEnterPassword.message}
 
-const Register = (props) => {
-	    
-		return (
-			<div>
-				<RegisterForm />
-			</div>
-		);
-	};
+				<Button
+					type='submit'
+					margin='normal'
+					fullWidth
+					variant='contained'
+					color='primary'
+					disabled={
+						!!errors.email ||
+						!!errors.password ||
+						!!errors.password2 ||
+						!!errors.username
+					}
+				>
+					{' '}
+					Register
+				</Button>
+				<Grid container >
+					{/* Password Recovery */}
+					<Grid item xs>
+						<Link href={ForgotRoute} variant='body2'>
+							Forgot password?
+						</Link>
+					</Grid>
+
+					{/* Redirect to Register */}
+					<Grid item>
+						<Link href={LoginRoute} variant='body2'>
+							{'Already a member? Sign In'}
+						</Link>
+					</Grid>
+				</Grid>
+			</form>
+		</Container>
+	);
+};
 
 export default Register;
