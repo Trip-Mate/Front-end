@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 
 // React Router + utils
@@ -21,6 +21,9 @@ import {
 	makeStyles,
 	InputAdornment,
 } from '@material-ui/core';
+
+/* Error Messages */
+import Alert from '@material-ui/lab/Alert';
 
 // Icons
 import LockIcon from '@material-ui/icons/Lock';
@@ -64,16 +67,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Register = (props) => {
-	const { register, errors, handleSubmit, control } = useForm({
+
+	const { register, errors, handleSubmit, control, watch } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
 		defaultValues: {
 			email: '',
 			username: '',
 			password: '',
-			password2: '',
+			reEnterPassword: '',
 		},
 	});
+
+	/* Keeps track of the password value */
+	const password = useRef({});
+	password.current = watch("password", "");
 
 	const onSubmit = async (user) => {
 		try {
@@ -126,7 +134,8 @@ const Register = (props) => {
 					}}
 					error={!!errors.email}
 				/>
-				{errors.email && errors.email.message}
+				{errors.email && <Alert severity="error">{errors.email.message}</Alert>}
+
 				{/*username  */}
 				<TextField
 					fullWidth
@@ -146,7 +155,7 @@ const Register = (props) => {
 					}}
 					error={!!errors.name}
 				/>
-				{errors.name && errors.name.message}
+				{errors.name && <Alert severity="error">{errors.name.message}</Alert>}
 
 				{/* Password */}
 				<TextField
@@ -171,7 +180,8 @@ const Register = (props) => {
 					}}
 					error={!!errors.password}
 				/>
-				{errors.password && errors.password.message}
+				{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
+
 				{/* Re-enter password */}
 				<TextField
 					margin='normal'
@@ -180,12 +190,10 @@ const Register = (props) => {
 					label='Re-enter password'
 					name='reEnterPassword'
 					inputRef={register({
-						required: 'Required',
-						pattern: {
-							value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-							message: 'Please re-enter your password',
+						validate: value =>
+							  value === password.current || "The passwords do not match"
 						},
-					})}
+					)}
 					InputProps={{
 						startAdornment: (
 							<InputAdornment position='start'>
@@ -195,7 +203,7 @@ const Register = (props) => {
 					}}
 					error={!!errors.reEnterPassword}
 				/>
-				{errors.reEnterPassword && errors.reEnterPassword.message}
+				{errors.reEnterPassword && <Alert severity="error">{errors.reEnterPassword.message}</Alert>}
 
 				<Button
 					type='submit'
@@ -205,9 +213,9 @@ const Register = (props) => {
 					color='primary'
 					disabled={
 						!!errors.email ||
+						!!errors.name ||
 						!!errors.password ||
-						!!errors.password2 ||
-						!!errors.username
+						!!errors.reEnterPassword
 					}
 				>
 					{' '}
