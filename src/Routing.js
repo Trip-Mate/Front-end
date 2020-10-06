@@ -1,3 +1,7 @@
+import React, { lazy } from 'react';
+
+import { Route, withRouter, Switch } from 'react-router-dom';
+
 import Home from './Pages/Website/Home/Home';
 
 const Features = lazy(() => import('./Pages/Website/Features/Features'));
@@ -17,22 +21,22 @@ export const RegisterRoute = '/register';
 export const LoginRoute = '/login';
 export const ForgotRoute = '/forgot';
 export const ResetRoute = '/reset/:resetPasswordToken';
-export const OverviewRoute = '/overview'
+export const OverviewRoute = '/overview';
 
 function Routing() {
-  return (
-    <Switch>
-      <Route path={HomeRoute} exact component={Home} />
-      <Route path={FeaturesRoute} component={Features} />
-      <Route path={DocsRoute} component={Docs} />
-      <Route path={ContactRoute} component={Contact} />
-      <Route path={RegisterRoute} exact component={Register} />
-      <Route path={LoginRoute} exact component={Login} />
-      <Route path={ForgotRoute} exact component={Forgot} />
-      <Route path={ResetRoute} exact component={Reset} />
-      <Route path={OverviewRoute} exact component={Overview} />
-    </Switch>
-  );
+	return (
+		<Switch>
+			<Route path={HomeRoute} exact component={Home} />
+			<Route path={FeaturesRoute} component={Features} />
+			<Route path={DocsRoute} component={Docs} />
+			<Route path={ContactRoute} component={Contact} />
+			<Route path={RegisterRoute} exact component={Register} />
+			<Route path={LoginRoute} exact component={Login} />
+			<Route path={ForgotRoute} exact component={Forgot} />
+			<Route path={ResetRoute} exact component={Reset} />
+			<Route path={OverviewRoute} exact component={Overview} />
+		</Switch>
+	);
 }
 
 export default withRouter(Routing);
