@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 
-import Spinner from './components/spinner/spinner.component';
+import Spinner from './components/Spinner/Spinner';
 
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routing from './Routing.js';

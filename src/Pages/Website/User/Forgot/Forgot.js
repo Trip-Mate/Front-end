@@ -70,9 +70,7 @@ function Forgot(props) {
       const res = await axios.post('/users/forgot', { user: email });
       if (res) {
         setIsSuccess(true);
-        setTimeout(() => {
           props.history.push(LoginRoute);
-        }, 2000);
       }
     } catch (error) {
       console.log(error);
