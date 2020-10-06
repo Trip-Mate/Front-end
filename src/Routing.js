@@ -1,7 +1,3 @@
-import React, { lazy } from 'react';
-
-import { Route, withRouter, Switch } from 'react-router-dom';
-
 import Home from './Pages/Website/Home/Home';
 
 const Features = lazy(() => import('./Pages/Website/Features/Features'));
