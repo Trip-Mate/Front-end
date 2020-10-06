@@ -1,7 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 
 // Router
-import { RegisterRoute, ForgotRoute } from '../../../../Routing';
+import { RegisterRoute, ForgotRoute, OverviewRoute } from '../../../../Routing';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -13,10 +14,7 @@ import { DevTool } from '@hookform/devtools';
 import {
 	Avatar,
 	Button,
-	CssBaseline,
 	TextField,
-	FormControlLabel,
-	Checkbox,
 	Link,
 	Grid,
 	Typography,
@@ -31,6 +29,7 @@ import Alert from '@material-ui/lab/Alert';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 /* Styles */
+
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(8),
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function LogIn() {
+function LogIn(props) {
 	const { register, errors, handleSubmit, control } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
@@ -63,7 +62,16 @@ function LogIn() {
 
 	const classes = useStyles();
 
-	const onSubmit = (values) => console.log(values);
+	const onSubmit = async (user) => {
+		try {
+			const res = await axios.post('/auth', user);
+			if (res) {
+					props.history.push(OverviewRoute);
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	};
 
 	return (
 		<Container component='main' maxWidth='xs'>

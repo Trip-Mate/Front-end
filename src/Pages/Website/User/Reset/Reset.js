@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 
 /* Axios */
-import API from '../../../../api';
+import axios from 'axios';
 
 // Router
 import { OverviewRoute } from '../../../../Routing';
@@ -76,7 +76,7 @@ function Reset(props) {
 
 	const onSubmit = async (passwords) => {
 		try {
-			const res = await API.post('/users/reset', { resetPasswordToken: props.match.params.resetPasswordToken, password: passwords.password  });
+			const res = await axios.post('/users/reset', { resetPasswordToken: props.match.params.resetPasswordToken, password: passwords.password  });
 			if (res) {
 				setIsSuccess(true);
 				setTimeout(() => {

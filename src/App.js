@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { Suspense } from 'react';
+
+import Spinner from './components/spinner/Spinner';
 
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routing from './Routing.js';
@@ -15,7 +17,9 @@ const App = () => (
 	<Router>
 		<CssBaseline />
 		<Navbar />
-		<Routing />
+		<Suspense fallback={<Spinner />}>
+			<Routing />
+		</Suspense>
 	</Router>
 );
 
