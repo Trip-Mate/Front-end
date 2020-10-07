@@ -1,9 +1,12 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import axios from 'axios';
+// Countries for the Autocomplete field
+import countriesWithID from '../../../countries';
 
 // Router
 // TODO: Import route from Routing.js when we know where the user should go after successful submission
 import { OverviewRoute } from '../../../Routing';
+
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
 
@@ -27,6 +30,7 @@ import {
   ListItemText
 } from '@material-ui/core';
 
+// Necessary imports for date pickers
 import {
 	KeyboardDatePicker,
 	MuiPickersUtilsProvider,
@@ -51,6 +55,7 @@ const user = {
 	createdAt: '2020-10-03T18:44:06.011Z',
 };
 
+// Styles
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(0),
@@ -76,8 +81,21 @@ const useStyles = makeStyles((theme) => ({
 function NewTrip(props) {
 
   const [fromDate, setFromDate] = React.useState(new Date(Date.now()));
-  const [toDate, setToDate] = React.useState(new Date(Date.now()));
-  const countries = []
+	const [toDate, setToDate] = React.useState(new Date(Date.now()));
+	const [countries, setCountries] = React.useState()
+	const classes = useStyles();
+	
+	const { register, errors, handleSubmit, control } = useForm({
+		mode: 'onChange',
+		reValidateMode: 'onChange',
+		defaultValues: {
+			// TODO: Add user here from the state here
+			title: '',
+			countries: [],
+			baseCurrency: '',
+			budget: '',
+		},
+	});
   
   const handleFromDateChange = (date) => {
 		setFromDate(date);
@@ -88,28 +106,16 @@ function NewTrip(props) {
   };
 
   const handleCountryChange = (event, newValue) => {
-    props.setSidebarFilters('genres', newValue);
-  };
-
-
-  	const { register, errors, handleSubmit, control } = useForm({
-			mode: 'onChange',
-			reValidateMode: 'onChange',
-			defaultValues: {
-// TODO: Add user here from the state here
-        title: '',
-        countries: [],
-        baseCurrency: '',
-        budget: '',
-			},
-    });
+    console.log(newValue)
+		setCountries(newValue);
+	};
     
-    const classes = useStyles();
-    
-  const onSubmit = async (data) => {
+	const onSubmit = async (data) => {
+		// Data to be sent to the server
     data.user = user
     data.from = fromDate
     data.to = toDate
+    data.countries = countries
     console.log(data)
 
 		try {
@@ -129,8 +135,7 @@ function NewTrip(props) {
 			<DevTool control={control} />
 
 			<div className={classes.paper}>
-				{/* Icon */}
-
+				{/* Icon and title*/}
 				<List>
 					<ListItem>
 						<ListItemAvatar>
@@ -146,6 +151,7 @@ function NewTrip(props) {
 					noValidate
 					onSubmit={handleSubmit(onSubmit)}
 				>
+					{/* Trip title */}
 					<TextField
 						variant='outlined'
 						margin='normal'
@@ -162,8 +168,8 @@ function NewTrip(props) {
 					{errors.title && (
 						<Alert severity='error'>{errors.title.message}</Alert>
 					)}
-
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
+						{/* Date picker from */}
 						<KeyboardDatePicker
 							margin='normal'
 							id='date-picker-from'
@@ -176,6 +182,7 @@ function NewTrip(props) {
 								'aria-label': 'change date',
 							}}
 						/>
+						{/* Date picker to */}
 						<KeyboardDatePicker
 							margin='normal'
 							id='date-picker-to'
@@ -189,12 +196,13 @@ function NewTrip(props) {
 							}}
 						/>
 					</MuiPickersUtilsProvider>
+					{/* Countries autocomplete */}
 					<Autocomplete
 						multiple
 						limitTags={3}
 						id='multiple-limit-tags'
 						onChange={handleCountryChange}
-						options={Countries}
+						options={countriesWithID.map((country) => country.name)}
 						renderInput={(params) => (
 							<TextField
 								className='autocomplete-input'
@@ -204,6 +212,7 @@ function NewTrip(props) {
 							/>
 						)}
 					/>
+					{/* Submit button */}
 					<Button
 						type='submit'
 						fullWidth
