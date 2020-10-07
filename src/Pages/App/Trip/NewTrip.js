@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import axios from 'axios';
 // Countries for the Autocomplete field
 import countriesWithID from '../../../countries';
+import currencies from '../../../currencies';
+
 
 // Router
 // TODO: Import route from Routing.js when we know where the user should go after successful submission
 import { OverviewRoute } from '../../../Routing';
 
 /* React Hook Form */
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 /* React Hook Form DevTools to help debug forms with validation. */
 import { DevTool } from '@hookform/devtools';
@@ -83,6 +85,8 @@ function NewTrip(props) {
   const [fromDate, setFromDate] = React.useState(new Date(Date.now()));
 	const [toDate, setToDate] = React.useState(new Date(Date.now()));
 	const [countries, setCountries] = React.useState()
+	const [baseCurrency, setBaseCurrency] = React.useState()
+	const [budget, setBudget] = React.useState()
 	const classes = useStyles();
 	
 	const { register, errors, handleSubmit, control } = useForm({
@@ -92,6 +96,8 @@ function NewTrip(props) {
 			// TODO: Add user here from the state here
 			title: '',
 			countries: [],
+			from: '',
+			to: '',
 			baseCurrency: '',
 			budget: '',
 		},
@@ -106,8 +112,15 @@ function NewTrip(props) {
   };
 
   const handleCountryChange = (event, newValue) => {
-    console.log(newValue)
 		setCountries(newValue);
+	};
+
+	const handleCurrencyChange = (event, newValue) => {
+		setBaseCurrency(newValue);
+	};
+
+	const handleBudgetChange = (event, newValue) => {
+		setBudget(event.target.value);
 	};
     
 	const onSubmit = async (data) => {
@@ -115,7 +128,9 @@ function NewTrip(props) {
     data.user = user
     data.from = fromDate
     data.to = toDate
-    data.countries = countries
+		data.countries = countries
+		data.baseCurrency = baseCurrency
+		data.budget = budget
     console.log(data)
 
 		try {
@@ -161,46 +176,63 @@ function NewTrip(props) {
 						fullWidth
 						id='title'
 						label='Trip Title'
-						type='title'
+						type='text'
 						name='title'
 						error={!!errors.title}
 					/>
 					{errors.title && (
 						<Alert severity='error'>{errors.title.message}</Alert>
 					)}
+
 					<MuiPickersUtilsProvider utils={DateFnsUtils}>
-						{/* Date picker from */}
-						<KeyboardDatePicker
-							margin='normal'
-							id='date-picker-from'
-							label='Departure'
-							name='from'
-							format='dd/MM/yyyy'
-							value={fromDate}
-							onChange={handleFromDateChange}
-							KeyboardButtonProps={{
-								'aria-label': 'change date',
-							}}
-						/>
-						{/* Date picker to */}
-						<KeyboardDatePicker
-							margin='normal'
-							id='date-picker-to'
-							label='Arrival'
-							name='to'
-							format='dd/MM/yyyy'
-							value={toDate}
-							onChange={handleToDateChange}
-							KeyboardButtonProps={{
-								'aria-label': 'change date',
-							}}
-						/>
+						<Fragment>
+							{/* Date picker from */}
+							<KeyboardDatePicker
+								margin='normal'
+								id='date-picker-from'
+								label='Departure: dd/mm/yyyy'
+								name='from'
+								format='dd/MM/yyyy'
+								inputRef={register({
+									required: 'Required',
+								})}
+								value={fromDate}
+								onChange={handleFromDateChange}
+								KeyboardButtonProps={{
+									'aria-label': 'change date',
+								}}
+								error={!!errors.from}
+							/>
+							{errors.from && (
+								<Alert severity='error'>Departure date is required</Alert>
+							)}
+							{/* Date picker to */}
+							<KeyboardDatePicker
+								margin='normal'
+								id='date-picker-to'
+								label='Arrival: dd/mm/yyyy'
+								name='to'
+								format='dd/MM/yyyy'
+								inputRef={register({
+									required: 'Required',
+								})}
+								value={toDate}
+								onChange={handleToDateChange}
+								KeyboardButtonProps={{
+									'aria-label': 'change date',
+								}}
+								error={!!errors.to}
+							/>
+							{errors.to && (
+								<Alert severity='error'>Arrival date is is required</Alert>
+							)}
+						</Fragment>
 					</MuiPickersUtilsProvider>
 					{/* Countries autocomplete */}
 					<Autocomplete
 						multiple
 						limitTags={3}
-						id='multiple-limit-tags'
+						id='country-picker'
 						onChange={handleCountryChange}
 						options={countriesWithID.map((country) => country.name)}
 						renderInput={(params) => (
@@ -212,6 +244,41 @@ function NewTrip(props) {
 							/>
 						)}
 					/>
+					{/* Base currency picker */}
+					<Autocomplete
+						id='base-currency-picker'
+						onChange={handleCurrencyChange}
+						options={currencies}
+						renderInput={(params) => (
+							<TextField
+								className='autocomplete-input'
+								{...params}
+								variant='outlined'
+								label='Base Currency'
+							/>
+						)}
+					/>
+					<TextField
+						variant='outlined'
+						margin='normal'
+						inputRef={register({
+							required: 'Trip budget must be a number',
+							pattern: {
+								value: /^[0-9._%+-]{2,}$/i,
+								message: 'Trip Budget must be a number and minimum 2 digits',
+							},
+						})}
+						fullWidth
+						id='budget'
+						label='Trip Budget'
+						type='number'
+						name='budget'
+						onChange={handleBudgetChange}
+						error={!!errors.budget}
+					/>
+					{errors.budget && (
+						<Alert severity='error'>{errors.budget.message}</Alert>
+					)}
 					{/* Submit button */}
 					<Button
 						type='submit'
@@ -219,7 +286,7 @@ function NewTrip(props) {
 						variant='contained'
 						color='primary'
 						className={classes.submit}
-						disabled={!!errors.title || !!errors.password}
+						disabled={!!errors.title || !!errors.budget}
 					>
 						New trip
 					</Button>
