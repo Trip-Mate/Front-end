@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import {
+	Avatar,
 	AppBar,
 	Toolbar,
 	Typography,
@@ -26,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		flexGrow: 1,
+	},
+	small: {
+		width: theme.spacing(4),
+		height: theme.spacing(4),
 	},
 }));
 
@@ -88,7 +93,11 @@ export default function MenuAppBar() {
 							onClick={(e) => setAnchorEl2(e.currentTarget)}
 							color='inherit'
 						>
-							<AccountCircle />
+							<Avatar
+								alt='Gabor'
+								src='https:///www.gravatar.com/avatar/8cbeea5b6b8b0188f6743a5d37f773f2?s=200&r=pg&d=mm'
+								className={classes.small}
+							/>
 						</IconButton>
 						<Menu
 							id='simple-menu'
