@@ -29,7 +29,7 @@ export const ResetRoute = '/reset/:resetPasswordToken';
 
 // App variables
 export const OverviewRoute = '/overview';
-export const NewTripRoute = '/trip/new-trip'
+export const NewTripRoute = '/trips/new-trip'
 
 // Router
 function Routing() {
