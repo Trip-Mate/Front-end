@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { Fragment, useContext } from 'react';
 
 // React Router + utils
 import { HomeRoute, FeaturesRoute, DocsRoute, ContactRoute, LoginRoute, RegisterRoute } from '../../Routing';
 import { Link } from 'react-router-dom';
+
+/* User Context */
+import CurrentUserContext from '../../contexts/current-user/current-user.context';
 
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function MenuAppBar() {
+
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [anchorEl2, setAnchorEl2] = React.useState(null);
@@ -38,6 +42,9 @@ export default function MenuAppBar() {
 		setAnchorEl(null);
 		setAnchorEl2(null);
 	};
+
+	/* get User Context */
+	const { currentUser } = useContext(CurrentUserContext);
 
 	return (
 		<div className={classes.root}>
@@ -81,41 +88,61 @@ export default function MenuAppBar() {
 						Trip Mate
 					</Typography>
 					<div>
-						<IconButton
-							aria-label='account of current user'
-							aria-controls='simple-menu'
-							aria-haspopup='true'
-							onClick={(e) => setAnchorEl2(e.currentTarget)}
-							color='inherit'
-						>
-							<AccountCircle />
-						</IconButton>
-						<Menu
-							id='simple-menu'
-							anchorEl={anchorEl2}
-							anchorOrigin={{
-								vertical: 'top',
-								horizontal: 'right',
-							}}
-							keepMounted
-							transformOrigin={{
-								vertical: 'top',
-								horizontal: 'right',
-							}}
-							open={Boolean(anchorEl2)}
-							onClose={() => setAnchorEl2(null)}
-						>
-							<MenuItem onClick={handleClose} component={Link} to={LoginRoute}>
-								Login
-							</MenuItem>
-							<MenuItem
-								onClick={handleClose}
-								component={Link}
-								to={RegisterRoute}
-							>
-								Register
-							</MenuItem>
-						</Menu>
+						{
+							currentUser ? 
+							(
+								<IconButton
+									aria-label='account of current user'
+									aria-controls='simple-menu'
+									aria-haspopup='true'
+									onClick={(e) => setAnchorEl2(e.currentTarget)}
+									color='inherit'
+								>
+									<AccountCircle 
+										style={{ backgroundImage: `url(${currentUser.avatar})` }}
+									/>
+								</IconButton>
+							) :
+							(
+								<Fragment>
+									<IconButton
+										aria-label='account of current user'
+										aria-controls='simple-menu'
+										aria-haspopup='true'
+										onClick={(e) => setAnchorEl2(e.currentTarget)}
+										color='inherit'
+									>
+										<AccountCircle />
+									</IconButton>
+									<Menu
+										id='simple-menu'
+										anchorEl={anchorEl2}
+										anchorOrigin={{
+											vertical: 'top',
+											horizontal: 'right',
+										}}
+										keepMounted
+										transformOrigin={{
+											vertical: 'top',
+											horizontal: 'right',
+										}}
+										open={Boolean(anchorEl2)}
+										onClose={() => setAnchorEl2(null)}
+									>
+										<MenuItem onClick={handleClose} component={Link} to={LoginRoute}>
+											Login
+										</MenuItem>
+										<MenuItem
+											onClick={handleClose}
+											component={Link}
+											to={RegisterRoute}
+										>
+											Register
+										</MenuItem>
+									</Menu>
+								</Fragment>
+							)
+						}
 					</div>
 				</Toolbar>
 			</AppBar>

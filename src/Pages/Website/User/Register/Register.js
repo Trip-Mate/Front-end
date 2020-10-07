@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import axios from 'axios';
 
 // React Router + utils
@@ -9,6 +9,9 @@ import { useForm } from 'react-hook-form';
 
 /* React Hook Form DevTools to help debug forms with validation. */
 import { DevTool } from '@hookform/devtools';
+
+/* User Context */
+import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
 
 // Material-UI
 import {
@@ -83,12 +86,17 @@ const Register = (props) => {
 	const password = useRef({});
 	password.current = watch("password", "");
 
+	/* get User Context */
+	const { setCurrentUser} = useContext(CurrentUserContext);
+
 	const onSubmit = async (user) => {
 		try {
 			const res = await axios.post('/users', user);
 			if (res) {
 					props.history.push(OverviewRoute);
 			}
+			const userData = res.data.user;
+			setCurrentUser(userData);
 		} catch (error) {
 			console.log(error);
 		}
