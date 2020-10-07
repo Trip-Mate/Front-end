@@ -7,10 +7,10 @@ import currencies from '../../../currencies';
 
 // Router
 // TODO: Import route from Routing.js when we know where the user should go after successful submission
-import { OverviewRoute } from '../../../Routing';
+import { SingleTripRoute } from '../../../Routing';
 
 /* React Hook Form */
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 /* React Hook Form DevTools to help debug forms with validation. */
 import { DevTool } from '@hookform/devtools';
@@ -135,11 +135,16 @@ function NewTrip(props) {
 
 		try {
 			const res = await axios.post('/trips', data);
-      if (res) {
+			if (res) {
+				const tripID = res.data.trip._id
         // TODO: Think where the user should go after form submission
         // TODO: Save trip data to the state
         // TODO: Update user data with the new trip id to the userState
-				props.history.push(OverviewRoute);
+				props.history.push({
+					pathname: `/trips/${tripID}`,
+					state: { trip: res.data.trip },
+				});
+				
 			}
 		} catch (error) {
 			console.log(error);
@@ -262,7 +267,7 @@ function NewTrip(props) {
 						variant='outlined'
 						margin='normal'
 						inputRef={register({
-							required: 'Trip budget must be a number',
+							required: 'Trip budget is required',
 							pattern: {
 								value: /^[0-9._%+-]{2,}$/i,
 								message: 'Trip Budget must be a number and minimum 2 digits',

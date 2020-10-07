@@ -15,6 +15,7 @@ const Reset = lazy(() => import('./Pages/Website/User/Reset/Reset'));
 // App routes
 const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
+const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
 
 // Route variables
 // Website variables
@@ -30,6 +31,7 @@ export const ResetRoute = '/reset/:resetPasswordToken';
 // App variables
 export const OverviewRoute = '/overview';
 export const NewTripRoute = '/trips/new-trip'
+export const SingleTripRoute = '/trips/:tripID';
 
 // Router
 function Routing() {
@@ -45,6 +47,7 @@ function Routing() {
 			<Route path={ResetRoute} exact component={Reset} />
 			<Route path={OverviewRoute} exact component={Overview} />
 			<Route path={NewTripRoute} exact component={NewTrip} />
+			<Route path={SingleTripRoute} exact component={SingleTrip} />
 		</Switch>
 	);
 }
