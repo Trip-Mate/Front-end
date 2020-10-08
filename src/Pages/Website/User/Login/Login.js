@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 
 // Router
@@ -28,6 +28,9 @@ import Alert from '@material-ui/lab/Alert';
 /* Material UI icons */
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
+/* User Context */
+import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
+
 /* Styles */
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function LogIn(props) {
+
 	const { register, errors, handleSubmit, control } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
@@ -60,6 +64,9 @@ function LogIn(props) {
 		},
 	});
 
+	/* get User Context */
+	const { setCurrentUser} = useContext(CurrentUserContext);
+
 	const classes = useStyles();
 
 	const onSubmit = async (user) => {
@@ -68,6 +75,9 @@ function LogIn(props) {
 			if (res) {
 					props.history.push(OverviewRoute);
 			}
+			const userData = res.data.user;
+			setCurrentUser(userData);
+			
 		} catch (error) {
 			console.log(error)
 		}
