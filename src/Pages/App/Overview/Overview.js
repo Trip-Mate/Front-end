@@ -56,10 +56,10 @@ const useStyles = makeStyles((theme) => ({
   image: {
     position: 'absolute',
     zIndex: '-1',
-    top: '0',
+    top: '56px',
     backgroundSize: 'cover',
     width: '100%',
-    height: '90vh',
+    height: '94vh',
     // filter: 'grayscale(100%)',
     opacity: '0.4',
     
