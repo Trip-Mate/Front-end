@@ -2,8 +2,8 @@ import React, { lazy } from 'react';
 
 import { Route, withRouter, Switch } from 'react-router-dom';
 
+// Website routes
 import Home from './Pages/Website/Home/Home';
-
 const Features = lazy(() => import('./Pages/Website/Features/Features'));
 const Docs = lazy(() => import('./Pages/Website/Docs/Docs'));
 const Contact = lazy(() => import('./Pages/Website/Contact/Contact'));
@@ -11,8 +11,14 @@ const Register = lazy(() => import('./Pages/Website/User/Register/Register'));
 const Login = lazy(() => import('./Pages/Website/User/Login/Login'));
 const Forgot = lazy(() => import('./Pages/Website/User/Forgot/Forgot'));
 const Reset = lazy(() => import('./Pages/Website/User/Reset/Reset'));
-const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 
+// App routes
+const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
+const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
+const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
+
+// Route variables
+// Website variables
 export const HomeRoute = '/';
 export const FeaturesRoute = '/features';
 export const DocsRoute = '/docs';
@@ -21,8 +27,13 @@ export const RegisterRoute = '/register';
 export const LoginRoute = '/login';
 export const ForgotRoute = '/forgot';
 export const ResetRoute = '/reset/:resetPasswordToken';
-export const OverviewRoute = '/overview';
 
+// App variables
+export const OverviewRoute = '/overview';
+export const NewTripRoute = '/trips/new-trip'
+export const SingleTripRoute = '/trips/:tripID';
+
+// Router
 function Routing() {
 	return (
 		<Switch>
@@ -35,6 +46,8 @@ function Routing() {
 			<Route path={ForgotRoute} exact component={Forgot} />
 			<Route path={ResetRoute} exact component={Reset} />
 			<Route path={OverviewRoute} exact component={Overview} />
+			<Route path={NewTripRoute} exact component={NewTrip} />
+			<Route path={SingleTripRoute} exact component={SingleTrip} />
 		</Switch>
 	);
 }

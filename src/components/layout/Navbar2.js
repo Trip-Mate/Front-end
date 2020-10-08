@@ -10,6 +10,7 @@ import CurrentUserContext from '../../contexts/current-user/current-user.context
 // Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import {
+	Avatar,
 	AppBar,
 	Toolbar,
 	Typography,
@@ -29,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
 	},
 	title: {
 		flexGrow: 1,
+	},
+	small: {
+		width: theme.spacing(4),
+		height: theme.spacing(4),
 	},
 }));
 
