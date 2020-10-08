@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 
 // Router
@@ -21,6 +21,7 @@ import {
 	makeStyles,
 	Container,
 } from '@material-ui/core';
+
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
@@ -66,16 +67,19 @@ function LogIn(props) {
 
 	/* get User Context */
 	const { setCurrentUser } = useContext(CurrentUserContext);
-
+	const [isSuccess, setIsSuccess] = useState(false);
 	const classes = useStyles();
 
 	const onSubmit = async (user) => {
 		try {
 			const res = await axios.post('/auth', user);
 			if (res) {
-					props.history.push(OverviewRoute);
-			}
-			const userData = res.data.user;
+				setIsSuccess(true);
+				setTimeout(() => {
+				props.history.push(OverviewRoute);
+			}, 2000);
+				}
+					const userData = res.data.user;
 			setCurrentUser(userData);
 			
 		} catch (error) {
@@ -88,11 +92,16 @@ function LogIn(props) {
 			<DevTool control={control} />
 
 			<div className={classes.paper}>
+			
+			{isSuccess && <Alert severity='success' className={classes.submit}>
+							Success. Go start your Adventure. 
+						</Alert>}
+					
+			
 				{/* Icon */}
 				<Avatar className={classes.avatar}>
 					<LockOutlinedIcon />
 				</Avatar>
-
 				{/* Title */}
 				<Typography component='h1' variant='h5'>
 					Sign in
@@ -142,15 +151,15 @@ function LogIn(props) {
 						error={!!errors.password}
 					/>
 					{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
-
+				
 					{/* Remember me */}
 
 					{/* <FormControlLabel
-            control={
-              <Controller as={Checkbox} control={control} name="remember" color="primary" defaultValue={false}/>}
-            label="Remember me"
-          /> */}
-
+							control={
+							<Controller as={Checkbox} control={control} name="remember" color="primary" defaultValue={false}/>}
+							label="Remember me"
+						/> */}
+					{!isSuccess ? (
 					<Button
 						type='submit'
 						fullWidth
@@ -161,7 +170,9 @@ function LogIn(props) {
 					>
 						Sign In
 					</Button>
-
+					) : ( 
+						isSuccess
+					)}
 					<Grid container>
 						{/* Password Recovery */}
 						<Grid item xs>

@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useState } from 'react';
 import axios from 'axios';
 
 // React Router + utils
@@ -88,13 +88,17 @@ const Register = (props) => {
 
 	/* get User Context */
 	const { setCurrentUser} = useContext(CurrentUserContext);
+	const [isSuccess, setIsSuccess] = useState(false);
 
 	const onSubmit = async (user) => {
 		try {
 			const res = await axios.post('/users', user);
 			if (res) {
+				setIsSuccess(true);
+				setTimeout(() => {
 					props.history.push(NewTripRoute);
-			}
+			}, 2000);
+		}
 			const userData = res.data.user;
 			setCurrentUser(userData);
 		} catch (error) {
@@ -107,6 +111,9 @@ const Register = (props) => {
 	return (
 		<Container maxWidth='xs' component='main'>
 			<DevTool control={control} />
+		
+			
+
 			<Avatar className={classes.avater}>
 				<AssignmentIndIcon />
 			</Avatar>
@@ -117,6 +124,9 @@ const Register = (props) => {
 				noValidate
 				onSubmit={handleSubmit(onSubmit)}
 			>
+			{ isSuccess && <Alert severity='success' className={classes.submit}>
+							Congratulations, it's the start of your journey.
+						</Alert> }
 				{/* Email */}
 				<TextField
 					id='email'
@@ -212,7 +222,7 @@ const Register = (props) => {
 					error={!!errors.reEnterPassword}
 				/>
 				{errors.reEnterPassword && <Alert severity="error">{errors.reEnterPassword.message}</Alert>}
-
+				{!isSuccess ? (
 				<Button
 					type='submit'
 					margin='normal'
@@ -229,6 +239,9 @@ const Register = (props) => {
 					{' '}
 					Register
 				</Button>
+				) : ( 
+						isSuccess
+					)}
 				<Grid container >
 					{/* Password Recovery */}
 					<Grid item xs>

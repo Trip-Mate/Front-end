@@ -8,7 +8,6 @@ import { DevTool } from '@hookform/devtools';
 
 /* Axios */
 import axios from 'axios';
-
 // Router
 import { LoginRoute } from '../../../../Routing';
 
@@ -71,9 +70,7 @@ function Forgot(props) {
       const res = await axios.post('/users/forgot', { user: email });
       if (res) {
         setIsSuccess(true);
-        setTimeout(() => {
-					props.history.push(LoginRoute);
-				}, 2000);
+          props.history.push(LoginRoute);
       }
     } catch (error) {
       console.log(error);
@@ -81,70 +78,69 @@ function Forgot(props) {
   };
 
   return (
-		<Container component='main' maxWidth='xs'>
-			<DevTool control={control} />
+    <Container component='main' maxWidth='xs'>
+      <DevTool control={control} />
 
-			<div className={classes.paper}>
-				{/* Icon */}
-				<Avatar className={classes.avatar}>
-					<MailOutlineIcon />
-				</Avatar>
-				{/* Title */}
-				<Typography component='h1' variant='h5'>
-					Forgot Password
-				</Typography>
-				{/* Linebreak */}
-				<hr className={classes.lineBreak} />
-				{/* Description */}
-				<Typography paragraph>
-					Please enter your email address in order to send you a password reset
-					link.
-				</Typography>
+      <div className={classes.paper}>
+        {/* Icon */}
+        <Avatar className={classes.avatar}>
+          <MailOutlineIcon />
+        </Avatar>
 
-				<form
-					className={classes.form}
-					noValidate
-					onSubmit={handleSubmit(onSubmit)}
-				>
-					{/* Email */}
-					<TextField
-						variant='outlined'
-						margin='normal'
-						inputRef={register({
-							required: 'Required',
-							pattern: {
-								value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-								message: 'Invalid email address',
-							},
-						})}
-						fullWidth
-						id='email'
-						label='Email Address'
-						type='email'
-						name='email'
-						error={!!errors.email}
-					/>
-					{errors.email && errors.email.message}
-					{!isSuccess ? (
-						<Button
-							type='submit'
-							fullWidth
-							variant='contained'
-							color='primary'
-							className={classes.submit}
-							disabled={!!errors.email || !!errors.password}
-						>
-							Send recovery email
-						</Button>
-					) : (
-						<Alert severity='success' className={classes.submit}>
-							Email has been sent!
-						</Alert>
-					)}
-				</form>
-			</div>
-		</Container>
-	);
+        {/* Title */}
+        <Typography component='h1' variant='h5'>
+          Forgot Password
+        </Typography>
+        {/* Linebreak */}
+        <hr className={classes.lineBreak} />
+        {/* Description */}
+        <Typography paragraph>
+          Please enter your email address in order to send you a password reset
+          link.
+        </Typography>
+
+        <form
+          className={classes.form}
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {/* Email */}
+          {!isSuccess ? (
+            <TextField
+              variant='outlined'
+              margin='normal'
+              inputRef={register({
+                required: 'Required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email address',
+                },
+              })}
+              fullWidth
+              id='email'
+              label='Email Address'
+              type='email'
+              name='email'
+              error={!!errors.email}
+            />
+          ) : (
+            <Alert severity='success'>Email has been sent!</Alert>
+          )}
+          {errors.email && errors.email.message}
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            disabled={!!errors.email || !!errors.password}
+          >
+            Send recovery email
+          </Button>
+        </form>
+      </div>
+    </Container>
+  );
 }
 
 export default Forgot;
