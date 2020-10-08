@@ -94,15 +94,9 @@ function Reset(props) {
 
 			<div className={classes.paper}>
 				{/* Icon */}
-				{isSuccess ? (
-						<Alert severity='success'>
-							Password has been reset!
-						</Alert>
-				) : null}
 				<Avatar className={classes.avatar}>
 					<VpnKeyOutlinedIcon />
 				</Avatar>
-
 				{/* Title */}
 				<Typography component='h1' variant='h5'>
 					Password Reset
@@ -137,16 +131,18 @@ function Reset(props) {
 						id='password'
 						error={!!errors.password}
 					/>
-					{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
-					
+					{errors.password && (
+						<Alert severity='error'>{errors.password.message}</Alert>
+					)}
+
 					{/* Password 2*/}
 					<TextField
 						variant='outlined'
 						margin='normal'
 						inputRef={register({
-							validate: value =>
-							  value === password.current || "The passwords do not match"
-						  })}
+							validate: (value) =>
+								value === password.current || 'The passwords do not match',
+						})}
 						fullWidth
 						name='password2'
 						label='Password Confirm'
@@ -154,17 +150,26 @@ function Reset(props) {
 						id='password2'
 						error={!!errors.password2}
 					/>
-					{errors.password2 && <Alert severity="error">{errors.password2.message}</Alert>}
-					<Button
-						type='submit'
-						fullWidth
-						variant='contained'
-						color='primary'
-						className={classes.submit}
-						disabled={!!errors.password || !!errors.password2}
-					>
-						Reset Password
-					</Button>
+					{errors.password2 && (
+						<Alert severity='error'>{errors.password2.message}</Alert>
+					)}
+					{/* Success message alert */}
+					{isSuccess ? (
+						<Alert severity='success' className={classes.submit}>
+							Password has been reset!
+						</Alert>
+					) : (
+						<Button
+							type='submit'
+							fullWidth
+							variant='contained'
+							color='primary'
+							className={classes.submit}
+							disabled={!!errors.password || !!errors.password2}
+						>
+							Reset Password
+						</Button>
+					)}
 				</form>
 			</div>
 		</Container>

@@ -2,7 +2,7 @@ import React, { useRef, useContext } from 'react';
 import axios from 'axios';
 
 // React Router + utils
-import { ForgotRoute, OverviewRoute, LoginRoute } from '../../../../Routing';
+import { ForgotRoute, LoginRoute, NewTripRoute } from '../../../../Routing';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -93,7 +93,7 @@ const Register = (props) => {
 		try {
 			const res = await axios.post('/users', user);
 			if (res) {
-					props.history.push(OverviewRoute);
+					props.history.push(NewTripRoute);
 			}
 			const userData = res.data.user;
 			setCurrentUser(userData);

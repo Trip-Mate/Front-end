@@ -65,7 +65,7 @@ function LogIn(props) {
 	});
 
 	/* get User Context */
-	const { setCurrentUser} = useContext(CurrentUserContext);
+	const { setCurrentUser } = useContext(CurrentUserContext);
 
 	const classes = useStyles();
 

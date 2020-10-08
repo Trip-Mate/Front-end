@@ -1,5 +1,5 @@
 import React from 'react'
-import {HomeRoute } from '../../../Routing'
+import { HomeRoute, NewTripRoute, ContactRoute } from '../../../Routing'
 import { NavLink } from "react-router-dom";
 
 // Material UI
@@ -7,8 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
   Typography,
-
-    Link,
 }  from '@material-ui/core';
 
 // Icons 
@@ -128,7 +126,7 @@ function Overview(props) {
           </div>
           <div  className={classes.mainDiv}>
             <div  className={classes.icons}  >
-                <NavLink className={classes.link}   to={HomeRoute} > 
+                <NavLink className={classes.link}   to={NewTripRoute} > 
                   <LanguageIcon   fontSize='large' className={classes.hover} />
                 </NavLink>
               </div>
@@ -160,7 +158,7 @@ function Overview(props) {
             </div>
           </div><div  className={classes.mainDiv}>
             <div  className={classes.icons}  >
-                <NavLink className={classes.link}   to={HomeRoute} > 
+                <NavLink className={classes.link}   to={ContactRoute} > 
                   <ShareIcon   fontSize='large' className={classes.hover} />
                 </NavLink>
               </div>

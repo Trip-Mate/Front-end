@@ -1,7 +1,7 @@
 import React, { Fragment, useContext } from 'react';
 
 // React Router + utils
-import { HomeRoute, FeaturesRoute, DocsRoute, ContactRoute, LoginRoute, RegisterRoute } from '../../Routing';
+import { HomeRoute, FeaturesRoute, DocsRoute, ContactRoute, LoginRoute, RegisterRoute, ProfileRoute } from '../../Routing';
 import { Link } from 'react-router-dom';
 
 /* User Context */
@@ -93,9 +93,8 @@ export default function MenuAppBar() {
 						Trip Mate
 					</Typography>
 					<div>
-						{
-							currentUser ? 
-							(
+						{currentUser ? (
+							<Fragment>
 								<IconButton
 									aria-label='account of current user'
 									aria-controls='simple-menu'
@@ -103,51 +102,93 @@ export default function MenuAppBar() {
 									onClick={(e) => setAnchorEl2(e.currentTarget)}
 									color='inherit'
 								>
-									<AccountCircle 
-										style={{ backgroundImage: `url(${currentUser.avatar})` }}
+									<Avatar
+										alt={currentUser.name}
+										src={`https:${currentUser.avatar}`}
+										className={classes.small}
 									/>
 								</IconButton>
-							) :
-							(
-								<Fragment>
-									<IconButton
-										aria-label='account of current user'
-										aria-controls='simple-menu'
-										aria-haspopup='true'
-										onClick={(e) => setAnchorEl2(e.currentTarget)}
-										color='inherit'
+								<Menu
+									id='simple-menu'
+									anchorEl={anchorEl2}
+									anchorOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									open={Boolean(anchorEl2)}
+									onClose={() => setAnchorEl2(null)}
+								>
+									<MenuItem
+										onClick={handleClose}
+										component={Link}
+										to={ProfileRoute}
 									>
-										<AccountCircle />
-									</IconButton>
-									<Menu
-										id='simple-menu'
-										anchorEl={anchorEl2}
-										anchorOrigin={{
-											vertical: 'top',
-											horizontal: 'right',
-										}}
-										keepMounted
-										transformOrigin={{
-											vertical: 'top',
-											horizontal: 'right',
-										}}
-										open={Boolean(anchorEl2)}
-										onClose={() => setAnchorEl2(null)}
+										Profile
+									</MenuItem>
+									{/* <MenuItem
+										onClick={handleClose}
+										component={Link}
+										to={RegisterRoute}
 									>
-										<MenuItem onClick={handleClose} component={Link} to={LoginRoute}>
-											Login
-										</MenuItem>
-										<MenuItem
-											onClick={handleClose}
-											component={Link}
-											to={RegisterRoute}
-										>
-											Register
-										</MenuItem>
-									</Menu>
-								</Fragment>
-							)
-						}
+										Settings
+									</MenuItem> */}
+									<MenuItem
+										onClick={handleClose}
+										component={Link}
+										to={HomeRoute}
+									>
+										Logout
+									</MenuItem>
+								</Menu>
+							</Fragment>
+						) : (
+							<Fragment>
+								<IconButton
+									aria-label='account of current user'
+									aria-controls='simple-menu'
+									aria-haspopup='true'
+									onClick={(e) => setAnchorEl2(e.currentTarget)}
+									color='inherit'
+								>
+									<AccountCircle />
+								</IconButton>
+								<Menu
+									id='simple-menu'
+									anchorEl={anchorEl2}
+									anchorOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									open={Boolean(anchorEl2)}
+									onClose={() => setAnchorEl2(null)}
+								>
+									<MenuItem
+										onClick={handleClose}
+										component={Link}
+										to={LoginRoute}
+									>
+										Login
+									</MenuItem>
+									<MenuItem
+										onClick={handleClose}
+										component={Link}
+										to={RegisterRoute}
+									>
+										Register
+									</MenuItem>
+								</Menu>
+							</Fragment>
+						)}
 					</div>
 				</Toolbar>
 			</AppBar>

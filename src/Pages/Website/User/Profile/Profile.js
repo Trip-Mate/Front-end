@@ -13,6 +13,7 @@ const Profile = () => {
                 <FormControl>
                     
                 </FormControl>
+                <h1>Profile</h1>
             </div>
         </Container>
     )

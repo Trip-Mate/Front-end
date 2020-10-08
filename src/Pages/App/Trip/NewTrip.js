@@ -1,13 +1,9 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useContext } from 'react'
 import axios from 'axios';
 // Countries for the Autocomplete field
 import countriesWithID from '../../../countries';
 import currencies from '../../../currencies';
-
-
-// Router
-// TODO: Import route from Routing.js when we know where the user should go after successful submission
-import { SingleTripRoute } from '../../../Routing';
+import currentUserContext from '../../../contexts/current-user/current-user.context';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -21,9 +17,6 @@ import {
 	Avatar,
 	Button,
 	TextField,
-	Link,
-	Grid,
-	Typography,
 	makeStyles,
   Container,
   List,
@@ -44,18 +37,6 @@ import FlightTakeoffIcon from '@material-ui/icons/FlightTakeoff';
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
-// TODO: Remove user object when we have context API complete and pull in the user info
-const user = {
-	resetPasswordToken: '07b491a963e65ddfb972f5327c4cf51ea88a8d10',
-	resetPasswordExpires: '2020-10-05T12:17:29.165Z',
-	_id: '5f78c676fb802202b6916535',
-	name: 'Gabor',
-	email: 'csecsi85@gmail.com',
-	avatar:
-		'//www.gravatar.com/avatar/8cbeea5b6b8b0188f6743a5d37f773f2?s=200&r=pg&d=mm',
-	createdAt: '2020-10-03T18:44:06.011Z',
-};
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -81,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NewTrip(props) {
+	const {currentUser} = useContext(currentUserContext)
 
   const [fromDate, setFromDate] = React.useState(new Date(Date.now()));
 	const [toDate, setToDate] = React.useState(new Date(Date.now()));
@@ -125,7 +107,7 @@ function NewTrip(props) {
     
 	const onSubmit = async (data) => {
 		// Data to be sent to the server
-    data.user = user
+    data.user = currentUser._id
     data.from = fromDate
     data.to = toDate
 		data.countries = countries
