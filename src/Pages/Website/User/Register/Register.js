@@ -7,8 +7,8 @@ import { ForgotRoute, LoginRoute, NewTripRoute } from '../../../../Routing';
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
 
-/* React Hook Form DevTools to help debug forms with validation. */
-import { DevTool } from '@hookform/devtools';
+/* User Context */
+import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
 
 /* User Context */
 import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Register = (props) => {
 
-	const { register, errors, handleSubmit, control, watch } = useForm({
+	const { register, errors, handleSubmit, watch } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
 		defaultValues: {
@@ -110,10 +110,7 @@ const Register = (props) => {
 
 	return (
 		<Container maxWidth='xs' component='main'>
-			<DevTool control={control} />
 		
-			
-
 			<Avatar className={classes.avater}>
 				<AssignmentIndIcon />
 			</Avatar>

@@ -3,9 +3,6 @@ import React, { useState, useRef } from 'react';
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
 
-/* React Hook Form DevTools to help debug forms with validation. */
-import { DevTool } from '@hookform/devtools';
-
 /* Axios */
 import axios from 'axios';
 
@@ -59,7 +56,7 @@ function Reset(props) {
   // console.log(props.match)
 	const [isSuccess, setIsSuccess] = useState(false);
 
-	const { register, errors, handleSubmit, control, watch } = useForm({
+	const { register, errors, handleSubmit, watch } = useForm({
 		mode: 'onChange',
 		reValidateMode: 'onChange',
 		defaultValues: {
@@ -90,7 +87,6 @@ function Reset(props) {
 
 	return (
 		<Container component='main' maxWidth='xs'>
-			<DevTool control={control} />
 
 			<div className={classes.paper}>
 				{/* Icon */}
