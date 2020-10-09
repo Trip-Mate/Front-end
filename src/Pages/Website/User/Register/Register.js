@@ -10,9 +10,6 @@ import { useForm } from 'react-hook-form';
 /* User Context */
 import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
 
-/* User Context */
-import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
-
 // Material-UI
 import {
 	Button,

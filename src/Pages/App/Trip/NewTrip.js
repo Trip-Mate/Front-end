@@ -93,6 +93,7 @@ function NewTrip(props) {
 	const [baseCurrency, setBaseCurrency] = React.useState()
 	const [budget, setBudget] = React.useState()
 	const [isSuccess, setIsSuccess] = React.useState(false);
+	const [isSubmitted, setIsSubmitted] = React.useState(false)
 	const classes = useStyles();
 
 	const tripDurationInDays = (from, to) => {
@@ -107,8 +108,8 @@ function NewTrip(props) {
 	
 	
 	const { register, errors, handleSubmit, control, watch } = useForm({
-		mode: 'onChange',
-		reValidateMode: 'onChange',
+		mode: 'all',
+		reValidateMode: 'all',
 		defaultValues: {
 			// TODO: Add user here from the state here
 			title: '',
@@ -141,7 +142,6 @@ function NewTrip(props) {
 		data.baseCurrency = baseCurrency
 		data.budget = budget
 		// TODO: Add duratio after back-end has been changed
-    console.log(data)
 
 		try {
 			const res = await axios.post('/trips', data);
@@ -209,7 +209,6 @@ function NewTrip(props) {
 							{errors.title.message}
 						</Alert>
 					)}
-
 					<MuiPickersUtilsProvider utils={MomentUtils}>
 						<div className={classes.datePickerContainer}>
 							<div>
@@ -230,6 +229,7 @@ function NewTrip(props) {
 									helperText={null}
 									inputRef={register({
 										required: 'Departure date is required',
+										validate: (value) => console.log(value),
 										pattern: {
 											value: /^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}_?))$/,
 											message: 'Invalid date',
@@ -251,6 +251,7 @@ function NewTrip(props) {
 									clearable={true}
 									inputRef={register({
 										required: 'Arrival date is required',
+										validate: (value) => console.log(value),
 										pattern: {
 											value: /^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}_?))$/,
 											message: 'Invalid date',
@@ -293,18 +294,34 @@ function NewTrip(props) {
 					<Autocomplete
 						multiple
 						limitTags={3}
-						id='country-picker'
+						id='countryPicker'
 						onChange={handleCountryChange}
 						options={countriesWithID.map((country) => country.name)}
 						renderInput={(params) => (
 							<TextField
 								className='autocomplete-input'
+								name='countryPicker'
 								{...params}
 								variant='outlined'
 								label='Countries'
+								inputRef={register({
+									validate: {
+										isUndefined: () =>
+											!!countries || 'Please select one or more countries',
+										isEmpty: () =>
+											(countries && countries.length !== 0) ||
+											'Please select one or more countries',
+									},
+								})}
 							/>
 						)}
 					/>
+					{/* {(!!countries && countries.length !== 0) || 'this error down'} */}
+					{!!errors.countryPicker && (
+						<Alert severity='error' className={classes.error}>
+							{errors.countryPicker.message}
+						</Alert>
+					)}
 					{/* Base currency picker */}
 					<Autocomplete
 						id='base-currency-picker'
@@ -345,6 +362,7 @@ function NewTrip(props) {
 					{/* Submit button */}
 					{!isSuccess ? (
 						<Button
+							onClick={() => setIsSubmitted(true)}
 							type='submit'
 							fullWidth
 							variant='contained'
