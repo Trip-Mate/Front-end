@@ -21,9 +21,14 @@ import {
 	Container,
 	Grid,
 	Link,
+	Typography,
 	makeStyles,
 	InputAdornment,
+	DialogTitle,
+	Dialog,
+	DialogContentText,
 } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
@@ -33,19 +38,24 @@ import LockIcon from '@material-ui/icons/Lock';
 import EmailIcon from '@material-ui/icons/Email';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 // Styles
 const useStyles = makeStyles((theme) => ({
-	form: {
-		marginTop: '20px',
-		display: 'grid',
-		width: '100%',
-		direction: 'column',
-		justify: 'center',
+	paper: {
+		marginTop: theme.spacing(8),
+		display: 'flex',
+		flexDirection: 'column',
 		alignItems: 'center',
-		margin: 'auto',
 	},
-
+	alert: {
+		border: "1px solid green",
+		borderRadius: "5px",
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		padding: '20px',
+	},
 	label: {
 		padding: theme.spacing(2),
 		textAlign: 'center',
@@ -62,10 +72,9 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(1),
 		backgroundColor: theme.palette.secondary.main,
 		display: 'grid',
-		left: '50%',
 		justify: 'center',
 		fontSize: 'large',
-		transform: 'translateX(-50%)'
+		transform: 'translateX(-50%)',
 	},
 }));
 
@@ -112,21 +121,34 @@ const Register = (props) => {
 		<Container maxWidth='xs' component='main'>
 			<DevTool control={control} />
 		
-			
+			<div className={classes.paper}>
 
 			<Avatar className={classes.avater}>
 				<AssignmentIndIcon />
 			</Avatar>
-			<h1 className={classes.h1}>Please Register Below</h1>
+			<Typography component='h1' variant='h5'>Please Register Below</Typography>
 			{/* form  */}
 			<form
 				className={classes.form}
 				noValidate
 				onSubmit={handleSubmit(onSubmit)}
 			>
-			{ isSuccess && <Alert severity='success' className={classes.submit}>
-							Congratulations, it's the start of your journey.
-						</Alert> }
+			{ isSuccess && 	<Dialog value="sm"
+						open={isSuccess}
+						aria-labelledby="alert-dialog-title"
+						aria-describedby="alert-dialog-description"
+					>	
+					<div value="sm" className={classes.alert}>
+							<CheckCircleIcon style={{ color: green[500] }}  />
+						<DialogTitle id="alert-dialog-title"  
+						style={{ color: green[500] }}>
+						{"Congratulations"}
+						</DialogTitle>
+						<DialogContentText id="alert-dialog-description">
+						It's the start of your journey.
+						</DialogContentText>
+						</div>
+					</Dialog> }
 				{/* Email */}
 				<TextField
 					id='email'
@@ -177,6 +199,7 @@ const Register = (props) => {
 
 				{/* Password */}
 				<TextField
+					fullWidth
 					margin='normal'
 					variant='outlined'
 					type='password'
@@ -202,6 +225,7 @@ const Register = (props) => {
 
 				{/* Re-enter password */}
 				<TextField
+					fullWidth
 					margin='normal'
 					variant='outlined'
 					type='password'
@@ -242,22 +266,23 @@ const Register = (props) => {
 				) : ( 
 						isSuccess
 					)}
-				<Grid container >
+				<Grid container margin='20px' >
 					{/* Password Recovery */}
-					<Grid item xs>
-						<Link href={ForgotRoute} variant='body2'>
+					<Grid item xs  margin='normal' >
+						<Link href={ForgotRoute} margin='normal' variant='body2'>
 							Forgot password?
 						</Link>
 					</Grid>
 
 					{/* Redirect to Register */}
-					<Grid item>
-						<Link href={LoginRoute} variant='body2'>
+					<Grid item >
+						<Link href={LoginRoute}  variant='body2'>
 							{'Already a member? Sign In'}
 						</Link>
 					</Grid>
 				</Grid>
 			</form>
+		  </div>
 		</Container>
 	);
 };

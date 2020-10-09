@@ -20,7 +20,12 @@ import {
 	Typography,
 	makeStyles,
 	Container,
+	InputAdornment,
+	DialogTitle,
+	Dialog,
+	DialogContentText,
 } from '@material-ui/core';
+import { green } from '@material-ui/core/colors';
 
 
 /* Error Messages */
@@ -28,6 +33,9 @@ import Alert from '@material-ui/lab/Alert';
 
 /* Material UI icons */
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import EmailIcon from '@material-ui/icons/Email';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 
 /* User Context */
 import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
@@ -40,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
+
 	},
 	avatar: {
 		margin: theme.spacing(1),
@@ -52,6 +61,14 @@ const useStyles = makeStyles((theme) => ({
 	submit: {
 		margin: theme.spacing(3, 0, 2),
 	},
+	alert: {
+		border: "1px solid green",
+		borderRadius: "5px",
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		padding: '20px',
+	}
 }));
 
 function LogIn(props) {
@@ -87,15 +104,39 @@ function LogIn(props) {
 		}
 	};
 
+
+
+
+
 	return (
 		<Container component='main' maxWidth='xs'>
 			<DevTool control={control} />
 
 			<div className={classes.paper}>
 			
-			{isSuccess && <Alert severity='success' className={classes.submit}>
-							Success. Go start your Adventure. 
-						</Alert>}
+		
+
+		 {isSuccess && 
+				<Dialog value="sm"
+
+						open={isSuccess}
+						aria-labelledby="alert-dialog-title"
+						aria-describedby="alert-dialog-description"
+					>	
+					<div className={classes.alert}>
+							<CheckCircleIcon style={{ color: green[500] }}  />
+						<DialogTitle id="alert-dialog-title"  
+						style={{ color: green[500] }}>
+						{"Successful login!"}
+						</DialogTitle>
+						<DialogContentText id="alert-dialog-description">
+						Start your journey.
+						</DialogContentText>
+						</div>
+					</Dialog>	
+					}
+	
+				
 					
 			
 				{/* Icon */}
@@ -129,6 +170,14 @@ function LogIn(props) {
 						type='email'
 						name='email'
 						error={!!errors.email}
+						InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<EmailIcon color='secondary' />
+							</InputAdornment>
+						),
+					}}
+
 					/>
 					{errors.email && <Alert severity="error">{errors.email.message}</Alert>}
 
@@ -143,6 +192,13 @@ function LogIn(props) {
 								message: 'Please include at least 1 character and 1 number',
 							},
 						})}
+						InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<AccountCircleIcon color='secondary' />
+							</InputAdornment>
+						),
+						}}
 						fullWidth
 						name='password'
 						label='Password'

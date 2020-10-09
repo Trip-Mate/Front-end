@@ -19,11 +19,14 @@ import {
   Typography,
   makeStyles,
   Container,
+  InputAdornment,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
 /* Material UI icons */
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import EmailIcon from '@material-ui/icons/Email';
+
 
 /* Styles */
 const useStyles = makeStyles((theme) => ({
@@ -116,6 +119,13 @@ function Forgot(props) {
                   message: 'Invalid email address',
                 },
               })}
+              InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<EmailIcon color='secondary' />
+							</InputAdornment>
+						),
+					}}
               fullWidth
               id='email'
               label='Email Address'

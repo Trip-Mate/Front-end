@@ -20,13 +20,22 @@ import {
 	Typography,
 	makeStyles,
 	Container,
+	InputAdornment,
+	DialogTitle,
+	Dialog,
+	DialogContentText,
 } from '@material-ui/core';
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
+import { green } from '@material-ui/core/colors';
 
 /* Material UI icons */
 import VpnKeyOutlinedIcon from '@material-ui/icons/VpnKeyOutlined';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+
+
 
 /* Styles */
 const useStyles = makeStyles((theme) => ({
@@ -124,6 +133,13 @@ function Reset(props) {
 								message: 'Please include at least 1 character and 1 number',
 							},
 						})}
+						InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<AccountCircleIcon color='secondary' />
+							</InputAdornment>
+						),
+						}}
 						fullWidth
 						name='password'
 						label='Password'
@@ -143,6 +159,13 @@ function Reset(props) {
 							validate: (value) =>
 								value === password.current || 'The passwords do not match',
 						})}
+						InputProps={{
+						startAdornment: (
+							<InputAdornment position='start'>
+								<AccountCircleIcon color='secondary' />
+							</InputAdornment>
+						),
+						}}
 						fullWidth
 						name='password2'
 						label='Password Confirm'
@@ -155,10 +178,6 @@ function Reset(props) {
 					)}
 					{/* Success message alert */}
 					{isSuccess ? (
-						<Alert severity='success' className={classes.submit}>
-							Password has been reset!
-						</Alert>
-					) : (
 						<Button
 							type='submit'
 							fullWidth
@@ -169,6 +188,23 @@ function Reset(props) {
 						>
 							Reset Password
 						</Button>
+					) : (
+						isSuccess && <Dialog value="sm"
+						open={isSuccess}
+						aria-labelledby="alert-dialog-title"
+						aria-describedby="alert-dialog-description"
+					>	
+					<div value="sm" className={classes.alert}>
+							<CheckCircleIcon style={{ color: green[500] }}  />
+						<DialogTitle id="alert-dialog-title"  
+						style={{ color: green[500] }}>
+						{"Your email has been sent! "}
+						</DialogTitle>
+						<DialogContentText id="alert-dialog-description">
+						Check your email.
+						</DialogContentText>
+						</div>
+					</Dialog> 
 					)}
 				</form>
 			</div>
