@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
 function LogIn(props) {
 
 	const { register, errors, handleSubmit } = useForm({
-		mode: 'onChange',
+		mode: 'onSubmit',
 		reValidateMode: 'onChange',
 		defaultValues: {
 			email: '',

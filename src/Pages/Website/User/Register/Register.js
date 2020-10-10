@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 const Register = (props) => {
 
 	const { register, errors, handleSubmit, watch } = useForm({
-		mode: 'onChange',
+		mode: 'onSubmit',
 		reValidateMode: 'onChange',
 		defaultValues: {
 			email: '',
