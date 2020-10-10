@@ -7,9 +7,6 @@ import { RegisterRoute, ForgotRoute, OverviewRoute } from '../../../../Routing';
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
 
-/* React Hook Form DevTools to help debug forms with validation. */
-import { DevTool } from '@hookform/devtools';
-
 /* Material UI core*/
 import {
 	Avatar,
@@ -73,8 +70,8 @@ const useStyles = makeStyles((theme) => ({
 
 function LogIn(props) {
 
-	const { register, errors, handleSubmit, control } = useForm({
-		mode: 'onChange',
+	const { register, errors, handleSubmit } = useForm({
+		mode: 'onSubmit',
 		reValidateMode: 'onChange',
 		defaultValues: {
 			email: '',
@@ -110,7 +107,6 @@ function LogIn(props) {
 
 	return (
 		<Container component='main' maxWidth='xs'>
-			<DevTool control={control} />
 
 			<div className={classes.paper}>
 			
@@ -227,7 +223,7 @@ function LogIn(props) {
 						Sign In
 					</Button>
 					) : ( 
-						isSuccess
+						null
 					)}
 					<Grid container>
 						{/* Password Recovery */}
