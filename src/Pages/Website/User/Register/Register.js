@@ -97,10 +97,10 @@ const Register = (props) => {
 				setIsSuccess(true);
 				setTimeout(() => {
 					props.history.push(NewTripRoute);
-			}, 2000);
-		}
-			const userData = res.data.user;
-			setCurrentUser(userData);
+				}, 2000);
+				setCurrentUser(res.data.user);
+				localStorage.setItem('user', JSON.stringify(res.data));
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -111,9 +111,6 @@ const Register = (props) => {
 	return (
 		<Container maxWidth='xs' component='main'>
 			<DevTool control={control} />
-		
-			
-
 			<Avatar className={classes.avater}>
 				<AssignmentIndIcon />
 			</Avatar>

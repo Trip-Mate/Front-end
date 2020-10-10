@@ -76,12 +76,11 @@ function LogIn(props) {
 			if (res) {
 				setIsSuccess(true);
 				setTimeout(() => {
-				props.history.push(OverviewRoute);
-			}, 2000);
-				}
-					const userData = res.data.user;
-			setCurrentUser(userData);
-			
+					props.history.push(OverviewRoute);
+				}, 2000);
+				setCurrentUser(res.data.user);
+				localStorage.setItem('user', JSON.stringify(res.data));
+			}
 		} catch (error) {
 			console.log(error)
 		}
@@ -92,12 +91,13 @@ function LogIn(props) {
 			<DevTool control={control} />
 
 			<div className={classes.paper}>
-			
-			{isSuccess && <Alert severity='success' className={classes.submit}>
-							Success. Go start your Adventure. 
-						</Alert>}
-					
-			
+				{
+					isSuccess && (
+						<Alert severity='success' className={classes.submit}>
+							Success. Go start your Adventure.
+						</Alert>
+					)
+				}
 				{/* Icon */}
 				<Avatar className={classes.avatar}>
 					<LockOutlinedIcon />

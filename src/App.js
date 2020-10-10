@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 
 import Spinner from './components/Spinner/Spinner';
 
@@ -19,7 +19,13 @@ import 'fontsource-roboto/700.css';
 const App = () => {
 
 	const [ currentUser, setCurrentUser ] = useState(null);
-	
+	useEffect(() => {
+		const loggedInUser = localStorage.getItem("user");
+		if (loggedInUser) {
+			const data = JSON.parse(loggedInUser);
+			setCurrentUser(data.user);
+		}
+	}, []);
 	return(
 		<Router>
 			<CssBaseline />
