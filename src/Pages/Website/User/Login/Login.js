@@ -90,12 +90,11 @@ function LogIn(props) {
 			if (res) {
 				setIsSuccess(true);
 				setTimeout(() => {
-				props.history.push(OverviewRoute);
-			}, 2000);
-				}
-					const userData = res.data.user;
-			setCurrentUser(userData);
-			
+					props.history.push(OverviewRoute);
+				}, 2000);
+				setCurrentUser(res.data.user);
+				localStorage.setItem('user', JSON.stringify(res.data));
+			}
 		} catch (error) {
 			console.log(error)
 		}
