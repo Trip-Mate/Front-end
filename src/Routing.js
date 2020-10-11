@@ -16,7 +16,7 @@ const Reset = lazy(() => import('./Pages/Website/User/Reset/Reset'));
 const Profile = lazy(() => import('./Pages/Website/User/Profile/Profile'));
 const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
-const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
+// const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
 const MyTrips = lazy(() => import('./Pages/App/Trip/my-trips'))
 
 // Route variables
@@ -34,7 +34,7 @@ export const ResetRoute = '/reset/:resetPasswordToken';
 export const ProfileRoute = '/user/profile'
 export const OverviewRoute = '/overview';
 export const NewTripRoute = '/trips/new-trip'
-export const SingleTripRoute = '/trips/:tripID';
+// export const SingleTripRoute = '/trips/:tripID';
 export const MyTripsRoute = '/trips/my-trips';
 
 // Router
@@ -51,7 +51,7 @@ function Routing() {
 			<Route path={ResetRoute} exact component={Reset} />
 			<Route path={OverviewRoute} exact component={Overview} />
 			<Route path={NewTripRoute} exact component={NewTrip} />
-			<Route path={SingleTripRoute} exact component={SingleTrip} />
+			{/* <Route path={SingleTripRoute} exact component={SingleTrip} /> */}
 			<Route path={ProfileRoute} exact component={Profile} />
 			<Route path={MyTripsRoute} exact component={MyTrips} />
 		</Switch>

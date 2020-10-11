@@ -92,7 +92,7 @@ const Profile = () => {
             <Grid container spacing={1} alignItems="center" justify="center">
                 <Grid item xs={6} sm={3}>
                     <Paper className={classes.paper}>
-                        <Avatar variant="rounded" className={classes.large}>
+                        <Avatar variant="rounded" className={classes.large} src={`${currentUser.avatar}`}>
 
                         </Avatar>
                     </Paper>
@@ -129,7 +129,7 @@ const Profile = () => {
                                 </TableRow>
                                 <TableRow>
                                     <TableCell width={200}>Base Currency</TableCell>
-                                    <TableCell>{currentUser?.base_currency}</TableCell>
+                                    <TableCell>{currentUser?.baseCurrency}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>

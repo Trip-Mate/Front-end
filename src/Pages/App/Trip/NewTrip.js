@@ -153,7 +153,7 @@ function NewTrip(props) {
 		data.countries = countries;
 		data.baseCurrency = baseCurrency;
 		data.budget = budget;
-		// TODO: Add duratio after back-end has been changed
+		data.duration = duration;
 		console.log(data);
 		try {
 			const res = await axios.post('/trips', data);
@@ -262,8 +262,8 @@ function NewTrip(props) {
 										clearable={true}
 										inputRef={register({
 											required: 'Arrival date is required',
-											validate: (value) => 
-												(toDate >= fromDate) || 'Arrival is before departure',
+											validate: (value) =>
+												toDate >= fromDate || 'Arrival is before departure',
 											pattern: {
 												value: /[^\d]+/gi,
 												message: 'Invalid date',
@@ -294,6 +294,9 @@ function NewTrip(props) {
 													: `${duration} days`
 												: 0
 										}
+										inputRef={register({
+											required: 'Duration is required',
+										})}
 										color='primary'
 									>
 										<WbSunnyIcon
