@@ -121,7 +121,7 @@ function NewTrip(props) {
 
 	const { register, errors, handleSubmit, control, watch } = useForm({
 		mode: 'onSubmit',
-		reValidateMode: 'onSubmit',
+		reValidateMode: 'all',
 		defaultValues: {
 			// TODO: Add user here from the state here
 			title: '',
@@ -157,6 +157,7 @@ function NewTrip(props) {
 		console.log(data);
 		try {
 			const res = await axios.post('/trips', data);
+			console.log('res: ', res)
 			if (res) {
 				setIsSuccess(true);
 				const tripID = res.data.trip._id;
@@ -261,10 +262,10 @@ function NewTrip(props) {
 										clearable={true}
 										inputRef={register({
 											required: 'Arrival date is required',
-											validate: (value) =>
+											validate: (value) => 
 												(toDate >= fromDate) || 'Arrival is before departure',
 											pattern: {
-												value: /^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}_?))$/,
+												value: /[^\d]+/gi,
 												message: 'Invalid date',
 											},
 										})}
