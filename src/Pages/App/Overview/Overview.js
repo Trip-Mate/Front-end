@@ -1,5 +1,5 @@
 import React from 'react'
-import { HomeRoute, NewTripRoute, ContactRoute } from '../../../Routing'
+import { HomeRoute, NewTripRoute, ContactRoute, MyTripsRoute } from '../../../Routing'
 import { NavLink } from "react-router-dom";
 
 // Material UI
@@ -106,7 +106,7 @@ function Overview(props) {
     <Container className={classes.Container} >
           <div  className={classes.mainDiv}>
             <div  className={classes.icons}  >
-                <NavLink className={classes.link}   to={HomeRoute} > 
+                <NavLink className={classes.link}   to={MyTripsRoute} > 
                   <FlightTakeoffIcon   fontSize='large' className={classes.hover} />
                 </NavLink>
               </div>

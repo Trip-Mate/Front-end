@@ -17,6 +17,7 @@ const Profile = lazy(() => import('./Pages/Website/User/Profile/Profile'));
 const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
 const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
+const MyTrips = lazy(() => import('./pages/App/Trip/my-trips'))
 
 // Route variables
 // Website variables
@@ -34,6 +35,7 @@ export const ProfileRoute = '/user/profile'
 export const OverviewRoute = '/overview';
 export const NewTripRoute = '/trips/new-trip'
 export const SingleTripRoute = '/trips/:tripID';
+export const MyTripsRoute = '/trips/my-trips';
 
 // Router
 function Routing() {
@@ -51,6 +53,7 @@ function Routing() {
 			<Route path={NewTripRoute} exact component={NewTrip} />
 			<Route path={SingleTripRoute} exact component={SingleTrip} />
 			<Route path={ProfileRoute} exact component={Profile} />
+			<Route path={MyTripsRoute} exact component={MyTrips} />
 		</Switch>
 	);
 }
