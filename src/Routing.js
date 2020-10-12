@@ -1,7 +1,8 @@
-import React, { lazy } from 'react';
+import React, { useState, lazy } from 'react';
 
 import { Route, withRouter, Switch } from 'react-router-dom';
 
+import UserTripsContext from './contexts/user-trips/user-trips.context';
 // Website routes
 import Home from './Pages/Website/Home/Home';
 const Features = lazy(() => import('./Pages/Website/Features/Features'));
@@ -39,6 +40,7 @@ export const MyTripsRoute = '/trips/my-trips';
 
 // Router
 function Routing() {
+	const [ userTrips, setUserTrips ] = useState([]);
 	return (
 		<Switch>
 			<Route path={HomeRoute} exact component={Home} />
@@ -53,7 +55,12 @@ function Routing() {
 			<Route path={NewTripRoute} exact component={NewTrip} />
 			{/* <Route path={SingleTripRoute} exact component={SingleTrip} /> */}
 			<Route path={ProfileRoute} exact component={Profile} />
+			<UserTripsContext.Provider value={{
+				userTrips,
+				setUserTrips
+			}}>
 			<Route path={MyTripsRoute} exact component={MyTrips} />
+			</UserTripsContext.Provider>
 		</Switch>
 	);
 }
