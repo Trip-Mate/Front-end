@@ -5,6 +5,7 @@ import CurrentUserContext from '../../../../contexts/current-user/current-user.c
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import EmailIcon from '@material-ui/icons/Email';
 import InfoIcon from '@material-ui/icons/Info';
+import Modal from '../../../../components/Modal/Modal';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -88,92 +89,110 @@ const Profile = () => {
     const classes = useStyles();
     const { currentUser } = useContext(CurrentUserContext);
     return (
-        <Container>
-            <Grid container spacing={1} alignItems="center" justify="center">
-                <Grid item xs={6} sm={3}>
-                    <Paper className={classes.paper}>
-                        <Avatar variant="rounded" className={classes.large} src={`${currentUser.avatar}`}>
-
-                        </Avatar>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Paper className={classes.paper} square={false}>
-                        <div className={classes.header}>
-                            Complete your Profile
-                        </div>
-                        <Stepper alternativeLabel activeStep={2} connector={<ColorlibConnector />} style={{"paddingLeft" : 0, paddingRight: 0}}>
-                            <Step>
-                                <StepLabel StepIconComponent={StepIcon}>Verify Email</StepLabel>
-                            </Step>
-                            <Step>
-                                <StepLabel StepIconComponent={StepIcon}>Basic Info</StepLabel>
-                            </Step>
-                            <Step>
-                                <StepLabel StepIconComponent={StepIcon}>Add Travel Mates</StepLabel>
-                            </Step>
-                        </Stepper>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Paper className={classes.paper}>
-                        <div className={classes.header}>
-                            Profile
-                        </div>
-                        <span style={{"marginTop": "0.8rem"}}>Basic info for a better experience</span>
-                        <Table className={classes.table}>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell width={200}>Name</TableCell>
-                                    <TableCell>{currentUser?.name}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell width={200}>Base Currency</TableCell>
-                                    <TableCell>{currentUser?.baseCurrency}</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Paper className={classes.paper}>
-                        <div className={classes.header}>
-                            Login Details
-                        </div>
-                        <span style={{"marginTop": "0.8rem"}}>Manage Email address and password</span>
-                        <Table className={classes.table}>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell width={200}>Email</TableCell>
-                                    <TableCell>{currentUser?.email}</TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell width={200}>Password</TableCell>
-                                    <TableCell>********</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                    <Paper className={classes.paper}>
-                        <div className={classes.header}>
-                            Travel Mate(s)
-                        </div>
-                        <span style={{"marginTop": "0.8rem"}}>You have 0 mate(s)</span>
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} sm={12}style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                    <Button variant="contained" color="secondary" style={{"margin": "0.2rem"}}>
-                        Disable Account
-                    </Button>
-                    <Button variant="contained" color="secondary" style={{"margin": "0.2rem"}}>
-                        Delete Account
-                    </Button>
-                </Grid>
-            </Grid>
-        </Container>
-    )
+			<Container>
+				<Grid container spacing={1} alignItems='center' justify='center'>
+					<Grid item xs={6} sm={3}>
+						<Paper className={classes.paper}>
+							<Avatar
+								variant='rounded'
+								className={classes.large}
+								src={`${currentUser.avatar}`}
+							></Avatar>
+						</Paper>
+					</Grid>
+					<Grid item xs={12} sm={12}>
+						<Paper className={classes.paper} square={false}>
+							<div className={classes.header}>Complete your Profile</div>
+							<Stepper
+								alternativeLabel
+								activeStep={2}
+								connector={<ColorlibConnector />}
+								style={{ paddingLeft: 0, paddingRight: 0 }}
+							>
+								<Step>
+									<StepLabel StepIconComponent={StepIcon}>
+										Verify Email
+									</StepLabel>
+								</Step>
+								<Step>
+									<StepLabel StepIconComponent={StepIcon}>Basic Info</StepLabel>
+								</Step>
+								<Step>
+									<StepLabel StepIconComponent={StepIcon}>
+										Add Travel Mates
+									</StepLabel>
+								</Step>
+							</Stepper>
+						</Paper>
+					</Grid>
+					<Grid item xs={12} sm={12}>
+						<Paper className={classes.paper}>
+							<div className={classes.header}>Profile</div>
+							<span style={{ marginTop: '0.8rem' }}>
+								Basic info for a better experience
+							</span>
+							<Table className={classes.table}>
+								<TableBody>
+									<TableRow>
+										<TableCell width={200}>Name</TableCell>
+										<TableCell>{currentUser?.name}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell width={200}>Base Currency</TableCell>
+										<TableCell>{currentUser?.baseCurrency}</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</Paper>
+					</Grid>
+					<Grid item xs={12} sm={12}>
+						<Paper className={classes.paper}>
+							<div className={classes.header}>Login Details</div>
+							<span style={{ marginTop: '0.8rem' }}>
+								Manage Email address and password
+							</span>
+							<Table className={classes.table}>
+								<TableBody>
+									<TableRow>
+										<TableCell width={200}>Email</TableCell>
+										<TableCell>{currentUser?.email}</TableCell>
+									</TableRow>
+									<TableRow>
+										<TableCell width={200}>Password</TableCell>
+										<TableCell>********</TableCell>
+									</TableRow>
+								</TableBody>
+							</Table>
+						</Paper>
+					</Grid>
+					<Grid item xs={12} sm={12}>
+						<Paper className={classes.paper}>
+							<div className={classes.header}>Travel Mate(s)</div>
+							<span style={{ marginTop: '0.8rem' }}>You have 0 mate(s)</span>
+						</Paper>
+					</Grid>
+					<Grid
+						item
+						xs={12}
+						sm={12}
+						style={{
+							display: 'flex',
+							justifyContent: 'center',
+							alignItems: 'center',
+						}}
+					>
+						<Button
+							variant='contained'
+							color='secondary'
+							style={{ margin: '0.2rem' }}
+						>
+							Disable Account
+						</Button>
+						<Modal />
+					</Grid>
+				</Grid>
+			</Container>
+		);
 };
 
 export default Profile;
