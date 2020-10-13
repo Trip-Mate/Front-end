@@ -7,15 +7,26 @@ import moment from 'moment';
 
 /* Material UI */
 import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
+import { 
+    GridList, 
+    GridListTile, 
+    GridListTileBar, 
+    ListSubheader, 
+    IconButton, 
+    Link,
+} from '@material-ui/core';
+
+/* Icons */
 import InfoIcon from '@material-ui/icons/Info';
 
-/* User Context */
-import CurrentUserContext from '../../../contexts/current-user/current-user.context';
+/* Empty Message */
+import { Alert, AlertTitle } from '@material-ui/lab';
+
+/* User Trips Context */
+import UserTripsContext from '../../../contexts/user-trips/user-trips.context';
+
+/* Redirect */
+import { NewTripRoute } from '../../../Routing';
 
 /* Styling Components */
 const useStyles = makeStyles((theme) => ({
@@ -42,13 +53,12 @@ const useStyles = makeStyles((theme) => ({
     icon: {
       color: 'rgba(255, 255, 255, 0.54)',
     },
-
 }));
 
 const MyTrips = () => {
     
-    /* getting trips from user context */
-    const { setCurrentUser, currentUser: { trips } } = useContext(CurrentUserContext);
+    /* getting user trips context */
+    const { userTrips, setUserTrips } = useContext(UserTripsContext);
 
     /* Styling Components */
     const classes = useStyles();
@@ -70,16 +80,19 @@ const MyTrips = () => {
                     }
                 });
 
-                /* set current user to have trips data */
-                setCurrentUser(res.data);
+                /* getting user trips */
+                const trips = res.data.trips;
+
+                /* passing user trips data to user trips context*/
+                setUserTrips(trips);
 
             } catch (error) {
                 console.log('Error', error.message);
             }
 
         })()
-	}, []);
-    
+    }, []);
+        
     return (
         <div className={classes.root}>
 
@@ -108,13 +121,19 @@ const MyTrips = () => {
                     {/* Trips Collection */}
 
                     {
-                        !trips.length ? (
-                            /* Link to redirect the user to Create Trip Page */
-                            <h2> You have no trips yet</h2>
+                        !userTrips ? (  
+
+                            <div style={{ width: '100%', position: 'absolute', top: '20vh'}}>
+                                <Alert severity="info" >
+                                    {/* Link to redirect the user to Create New Trip Page  */}
+                                    <AlertTitle>It seems like you have no trips yet</AlertTitle>
+                                    Click <Link href={NewTripRoute} style={{ fontWeight: 'bold'}}>here</Link> and start your journey
+                                </Alert>
+                            </div>  
 
                         ) : (
 
-                            trips.map(({ backgroundImage, from, title, to, _id}) => {
+                            userTrips.map(({ backgroundImage, from, title, to, _id}) => {
 
                                 /* Sets a flag on the original moment to use UTC to display a moment instead of the original moment's time. */
                                 const utcStart = new moment(from).utc()
