@@ -93,25 +93,29 @@ function SimpleModal(props) {
 		setOpen(false);
   };
   
-  	const onSubmit = async (user) => {
+  	const onSubmit = async (data) => {
 			try {
 				/* getting user token */
 				const user = JSON.parse(localStorage.getItem('user'));
         const token = user.token;
+				const password = data.password;
+				const options = {
+					headers: { 'x-auth-token': token },
+				};
         
-				const res = await axios.delete('/users/', {
-					headers: {
-						'x-auth-token': token,
+				const res = await axios.post(
+					'/users/delete',
+					{
+						user: { password },
 					},
-					user,
-				});
-				console.log(user);
+					options
+				);
 				if (res) {
-					setIsSuccess(true);
-						props.history.push(HomeRoute);
-
-					setCurrentUser(null);
-					localStorage.setItem('user', JSON.stringify(currentUser));
+					// setIsSuccess(true);
+					// 	props.history.push(HomeRoute);
+console.log('success')
+					// setCurrentUser(null);
+					// localStorage.setItem('user', JSON.stringify(currentUser));
 				}
 			} catch (error) {
 				console.log(error);
