@@ -110,12 +110,14 @@ function SimpleModal(props) {
 					},
 					options
 				);
-				if (res) {
-					// setIsSuccess(true);
-					// 	props.history.push(HomeRoute);
-console.log('success')
-					// setCurrentUser(null);
-					// localStorage.setItem('user', JSON.stringify(currentUser));
+				if (res.status === 200) {
+					// console.log(res)
+					setIsSuccess(true);
+					console.log('success')
+					props.history.push(HomeRoute);
+					setCurrentUser(null);
+					window.localStorage.clear();
+					
 				}
 			} catch (error) {
 				console.log(error);
