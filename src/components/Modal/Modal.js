@@ -1,4 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import axios from 'axios';
+import {HomeRoute} from '../../Routing';
+import CurrentUserContext from '../../contexts/current-user/current-user.context';
+import { withRouter } from 'react-router-dom';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -22,6 +26,7 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
+
 
 function getModalStyle() {
 
@@ -64,11 +69,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SimpleModal(props) {
+function SimpleModal(props) {
 	const classes = useStyles();
 	// getModalStyle is not a pure function, we roll the style only on the first render
 	const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const [isSuccess, setIsSuccess] = React.useState(false)
   
   const { register, errors, handleSubmit } = useForm({
 		mode: 'onSubmit',
@@ -87,20 +94,28 @@ export default function SimpleModal(props) {
   };
   
   	const onSubmit = async (user) => {
-			// try {
-        // const res = await axios.post('/auth', user);
-        console.log(user)
-			// 	if (res) {
-			// 		setIsSuccess(true);
-			// 		setTimeout(() => {
-			// 			props.history.push(OverviewRoute);
-			// 		}, 2000);
-			// 		setCurrentUser(res.data.user);
-			// 		localStorage.setItem('user', JSON.stringify(res.data));
-			// 	}
-			// } catch (error) {
-			// 	console.log(error);
-			// }
+			try {
+				/* getting user token */
+				const user = JSON.parse(localStorage.getItem('user'));
+        const token = user.token;
+        
+				const res = await axios.delete('/users/', {
+					headers: {
+						'x-auth-token': token,
+					},
+					user,
+				});
+				console.log(user);
+				if (res) {
+					setIsSuccess(true);
+						props.history.push(HomeRoute);
+
+					setCurrentUser(null);
+					localStorage.setItem('user', JSON.stringify(currentUser));
+				}
+			} catch (error) {
+				console.log(error);
+			}
 		};
 
   const modalBody = (
@@ -117,8 +132,7 @@ export default function SimpleModal(props) {
 					Delete Account
 				</Typography>
 				<p id='simple-modal-description' className={classes.description}>
-					You are about to permanently
-					<span style={{ color: '#f50057' }}>DELETE</span> your account, if you
+					You are about to permanently <span style={{ color: '#f50057' }}>DELETE</span> your account, if you
 					wish to proceed, please enter your password and click on delete.
 				</p>
 				<form
@@ -195,3 +209,5 @@ export default function SimpleModal(props) {
 		</div>
 	);
 }
+
+export default withRouter(SimpleModal)
