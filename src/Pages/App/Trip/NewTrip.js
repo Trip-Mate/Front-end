@@ -154,7 +154,7 @@ function NewTrip(props) {
 		data.baseCurrency = baseCurrency;
 		data.budget = budget;
 		data.duration = duration;
-		console.log(data);
+		console.log(data.to);
 		try {
 			const res = await axios.post('/trips', data);
 			console.log('res: ', res)
@@ -165,10 +165,7 @@ function NewTrip(props) {
 				// TODO: Save trip data to the state
 				// TODO: Update user data with the new trip id to the userState
 				setTimeout(() => {
-					props.history.push({
-						pathname: `/trips/${tripID}`,
-						state: { trip: res.data.trip },
-					});
+					console.log(res)
 				}, 2000);
 			}
 		} catch (error) {

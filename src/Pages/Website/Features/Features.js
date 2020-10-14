@@ -1,9 +1,12 @@
 import React from 'react';
 
+
 import { Box } from '@material-ui/core';
+import RatesConverter from '../../../components/RatesConverter/RatesConverter';
 
 function Features() {
-	return <Box>Features</Box>;
+	return <RatesConverter />;
+
 }
 
 export default Features;
