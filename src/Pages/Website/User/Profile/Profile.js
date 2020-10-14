@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Avatar, Container, Grid, makeStyles, Paper, Table, TableBody, TableRow, TableCell, Button, Stepper, Step, StepLabel, withStyles } from '@material-ui/core';
 import StepConnector from '@material-ui/core/StepConnector';
 import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import EmailIcon from '@material-ui/icons/Email';
 import InfoIcon from '@material-ui/icons/Info';
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import Modal from '../../../../components/Modal/Modal';
 
 const useStyles = makeStyles((theme) => ({
@@ -15,6 +17,10 @@ const useStyles = makeStyles((theme) => ({
     large: {
         width: theme.spacing(15),
         height: theme.spacing(15),
+    },
+    headerContainer: {
+        display: "flex",
+        justifyContent: "space-between"
     },
     header: {
         fontSize: '1.5rem'
@@ -88,49 +94,75 @@ const ColorlibConnector = withStyles({
 const Profile = () => {
     const classes = useStyles();
     const { currentUser } = useContext(CurrentUserContext);
+    const [activeStep, setActiveStep] = useState(0);
+    useEffect(() => {
+        if (currentUser?.isEmailVerified) {
+            setActiveStep(1)
+        } else if ( currentUser?.name && currentUser?.baseCurrency) {
+            setActiveStep(2)
+        } else if (currentUser?.travelMates?.length > 0) {
+            setActiveStep(3)
+        }
+    }, [currentUser]);
     return (
 			<Container>
 				<Grid container spacing={1} alignItems='center' justify='center'>
 					<Grid item xs={6} sm={3}>
 						<Paper className={classes.paper}>
-							<Avatar
-								variant='rounded'
-								className={classes.large}
-								src={`${currentUser.avatar}`}
-							></Avatar>
+                            <div style={{display: "flex", justifyContent: "center"}}>
+                                <Avatar
+                                    variant='rounded'
+                                    className={classes.large}
+                                    src={`${currentUser.avatar}`}
+                                ></Avatar>
+                            </div>
+							
 						</Paper>
 					</Grid>
-					<Grid item xs={12} sm={12}>
-						<Paper className={classes.paper} square={false}>
-							<div className={classes.header}>Complete your Profile</div>
-							<Stepper
-								alternativeLabel
-								activeStep={2}
-								connector={<ColorlibConnector />}
-								style={{ paddingLeft: 0, paddingRight: 0 }}
-							>
-								<Step>
-									<StepLabel StepIconComponent={StepIcon}>
-										Verify Email
-									</StepLabel>
-								</Step>
-								<Step>
-									<StepLabel StepIconComponent={StepIcon}>Basic Info</StepLabel>
-								</Step>
-								<Step>
-									<StepLabel StepIconComponent={StepIcon}>
-										Add Travel Mates
-									</StepLabel>
-								</Step>
-							</Stepper>
-						</Paper>
-					</Grid>
+                    {
+                        activeStep < 3 && (
+                            <Grid item xs={12} sm={12}>
+                                <Paper className={classes.paper} square={false}>
+                                    <div className={classes.header}>Complete your Profile</div>
+                                    <Stepper
+                                        alternativeLabel
+                                        activeStep={activeStep}
+                                        connector={<ColorlibConnector />}
+                                        style={{ paddingLeft: 0, paddingRight: 0 }}
+                                    >
+                                        <Step>
+                                            <StepLabel StepIconComponent={StepIcon}>
+                                                Verify Email
+                                            </StepLabel>
+                                        </Step>
+                                        <Step>
+                                            <StepLabel StepIconComponent={StepIcon}>Basic Info</StepLabel>
+                                        </Step>
+                                        <Step>
+                                            <StepLabel StepIconComponent={StepIcon}>
+                                                Add Travel Mates
+                                            </StepLabel>
+                                        </Step>
+                                    </Stepper>
+                                </Paper>
+                            </Grid>
+                        )
+                    }
 					<Grid item xs={12} sm={12}>
 						<Paper className={classes.paper}>
-							<div className={classes.header}>Profile</div>
-							<span style={{ marginTop: '0.8rem' }}>
-								Basic info for a better experience
-							</span>
+                            <div className={classes.headerContainer}>
+                                <div>
+                                    <div className={classes.header}>Profile</div>
+                                    <span style={{ marginTop: '0.8rem' }}>
+                                        Basic info for a better experience
+                                    </span>
+                                </div>
+                                <div>
+                                    <Button variant="outlined">
+                                        <EditIcon fontSize="small"/> Edit
+                                    </Button>
+                                </div>
+                            </div>
 							<Table className={classes.table}>
 								<TableBody>
 									<TableRow>
@@ -147,10 +179,14 @@ const Profile = () => {
 					</Grid>
 					<Grid item xs={12} sm={12}>
 						<Paper className={classes.paper}>
-							<div className={classes.header}>Login Details</div>
-							<span style={{ marginTop: '0.8rem' }}>
-								Manage Email address and password
-							</span>
+                            <div className={classes.headerContainer}>
+                                <div>
+                                    <div className={classes.header}>Login Details</div>
+                                    <span style={{ marginTop: '0.8rem' }}>
+                                        Manage Email address and password
+                                    </span>
+                                </div>
+                            </div>
 							<Table className={classes.table}>
 								<TableBody>
 									<TableRow>
@@ -167,8 +203,19 @@ const Profile = () => {
 					</Grid>
 					<Grid item xs={12} sm={12}>
 						<Paper className={classes.paper}>
-							<div className={classes.header}>Travel Mate(s)</div>
-							<span style={{ marginTop: '0.8rem' }}>You have 0 mate(s)</span>
+                            <div className={classes.headerContainer}>
+                                <div>
+                                    <div className={classes.header}>Travel Mate(s)</div>
+                                    <span style={{ marginTop: '0.8rem' }}>
+                                        You have 0 mate(s)
+                                    </span>
+                                </div>
+                                <div>
+                                    <Button variant="outlined">
+                                        <AddIcon fontSize="small"/> ADD
+                                    </Button>
+                                </div>
+                            </div>
 						</Paper>
 					</Grid>
 					<Grid
