@@ -56,6 +56,7 @@ function Routing() {
 			<Route path={OverviewRoute} exact component={Overview} />
 			<Route path={MyTripsRoute} exact component={MyTrips} />
 			<Route path={NewTripRoute} exact component={NewTrip} />
+			<Route path={ProfileRoute} exact component={Profile} />
 			<SingleTripContext.Provider
 				value={{
 					singleTrip,
