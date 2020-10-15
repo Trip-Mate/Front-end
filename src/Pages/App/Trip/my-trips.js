@@ -1,4 +1,6 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+
+import { useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 
@@ -24,9 +26,6 @@ import InfoIcon from '@material-ui/icons/Info';
 
 /* Empty Message */
 import { Alert, AlertTitle } from '@material-ui/lab';
-
-/* User Trips Context */
-import UserTripsContext from '../../../contexts/user-trips/user-trips.context';
 
 /* Redirect */
 import { NewTripRoute } from '../../../Routing';
@@ -72,8 +71,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MyTrips = () => {
+
 	/* getting user trips context */
-	const { userTrips, setUserTrips } = useContext(UserTripsContext);
+	const [ userTrips, setUserTrips ] = useState([]);
+
+	let history = useHistory();
 
 	/* Styling Components */
 	const classes = useStyles();
@@ -82,6 +84,7 @@ const MyTrips = () => {
 	useEffect(() => {
 		(async () => {
 			try {
+
 				/* getting user token */
 				const user = JSON.parse(localStorage.getItem('user'));
 				const token = user.token;
@@ -98,11 +101,13 @@ const MyTrips = () => {
 
 				/* passing user trips data to user trips context*/
 				setUserTrips(trips);
+
 			} catch (error) {
 				console.log('Error', error.message);
 			}
 		})();
-	}, []);
+	}, [setUserTrips]);
+
 
 	return (
 		<div className={classes.root}>
@@ -140,7 +145,7 @@ const MyTrips = () => {
 
 				{/* Trips Collection */}
 
-				{!userTrips ? (
+				{!userTrips.length ? (
 					<div style={{ width: '100%', position: 'absolute', top: '20vh' }}>
 						<Alert severity='info'>
 							{/* Link to redirect the user to Create New Trip Page  */}
@@ -157,6 +162,11 @@ const MyTrips = () => {
 						/* Sets a flag on the original moment to use UTC to display a moment instead of the original moment's time. */
 						const utcStart = new moment(from).utc();
 						const utcEnd = new moment(to).utc();
+						
+						/* passing trip id to path when user select a trip */
+						function handleClick () {
+							history.push(`/trips/${_id}`);
+						}
 
 						return (
 							<GridListTile key={_id}>
@@ -174,6 +184,7 @@ const MyTrips = () => {
 										<IconButton
 											aria-label={`info about ${title}`}
 											className={classes.icon}
+											onClick={handleClick}
 										>
 											<InfoIcon />
 										</IconButton>

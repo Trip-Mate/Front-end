@@ -2,7 +2,7 @@ import React, { useState, lazy } from 'react';
 
 import { Route, withRouter, Switch } from 'react-router-dom';
 
-import UserTripsContext from './contexts/user-trips/user-trips.context';
+import SingleTripContext from './contexts/single-trip/single-trip.context'
 // Website routes
 import Home from './Pages/Website/Home/Home';
 const Features = lazy(() => import('./Pages/Website/Features/Features'));
@@ -35,12 +35,13 @@ export const ResetRoute = '/reset/:resetPasswordToken';
 export const ProfileRoute = '/user/profile'
 export const OverviewRoute = '/overview';
 export const NewTripRoute = '/trips/new-trip'
-// export const SingleTripRoute = '/trips/:tripID';
+export const SingleTripRoute = `/trips/:tripID`;
 export const MyTripsRoute = '/trips/my-trips';
 
 // Router
 function Routing() {
 	const [ userTrips, setUserTrips ] = useState([]);
+	const [ singleTrip, setSingleTrip ] = useState({});
 	return (
 		<Switch>
 			<Route path={HomeRoute} exact component={Home} />
@@ -52,15 +53,15 @@ function Routing() {
 			<Route path={ForgotRoute} exact component={Forgot} />
 			<Route path={ResetRoute} exact component={Reset} />
 			<Route path={OverviewRoute} exact component={Overview} />
-			<Route path={NewTripRoute} exact component={NewTrip} />
-			{/* <Route path={SingleTripRoute} exact component={SingleTrip} /> */}
-			<Route path={ProfileRoute} exact component={Profile} />
+			<SingleTripContext.Provider value={{
+				singleTrip,
+				setSingleTrip
 			<UserTripsContext.Provider value={{
 				userTrips,
 				setUserTrips
 			}}>
-			<Route path={MyTripsRoute} exact component={MyTrips} />
-			</UserTripsContext.Provider>
+				<Route path={SingleTripRoute} component={SingleTrip} />
+			</SingleTripContext.Provider>
 		</Switch>
 	);
 }
