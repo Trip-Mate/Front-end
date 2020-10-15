@@ -2,7 +2,7 @@ import React, { Fragment, useContext } from 'react';
 
 // React Router + utils
 import { HomeRoute, FeaturesRoute, DocsRoute, ContactRoute, LoginRoute, RegisterRoute, ProfileRoute } from '../../Routing';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 /* User Context */
 import CurrentUserContext from '../../contexts/current-user/current-user.context';
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function MenuAppBar() {
+function MenuAppBar(props) {
 
 	const classes = useStyles();
 	const [anchorEl, setAnchorEl] = React.useState(null);
@@ -48,8 +48,15 @@ export default function MenuAppBar() {
 		setAnchorEl2(null);
 	};
 
+	const handleLogout = () => {
+		window.localStorage.clear();
+		setCurrentUser(null);
+		handleClose();
+		props.history.push(HomeRoute);
+	}
+
 	/* get User Context */
-	const { currentUser } = useContext(CurrentUserContext);
+	const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
 	return (
 		<div className={classes.root}>
@@ -138,7 +145,7 @@ export default function MenuAppBar() {
 										Settings
 									</MenuItem> */}
 									<MenuItem
-										onClick={handleClose}
+										onClick={handleLogout}
 										component={Link}
 										to={HomeRoute}
 									>
@@ -195,3 +202,5 @@ export default function MenuAppBar() {
 		</div>
 	);
 }
+
+export default withRouter(MenuAppBar)
