@@ -18,6 +18,11 @@ import {
 	MenuItem,
 	Menu,
 } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+import DialogActions from '@material-ui/core/DialogActions';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
@@ -37,6 +42,60 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+function Logout(props) {
+
+	/* get User Context */
+	const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+
+
+
+const handleLogout = () => {
+ window.localStorage.clear();
+ setCurrentUser(null);
+ handlePopupClose();
+ props.history.push(HomeRoute);
+}
+const [open, setOpen] = React.useState(false);
+
+const handleClickOpen = () => {
+setOpen(true);
+};
+const handlePopupClose = () => {
+setOpen(false);
+};
+const classes = useStyles();
+
+return (
+ <div> 
+   <Button  onClick={handleClickOpen}> Logout   </Button>
+   <Dialog
+   TransitionComponent={Transition}
+   
+   open={open}
+   onClose={handlePopupClose}
+   aria-labelledby="alert-dialog-slide-title"
+   aria-describedby="alert-dialog-slide-description"
+	 >
+   <DialogTitle id="alert-dialog-slide-title">{" Are you sure you want to leave?"}</DialogTitle>
+   <DialogActions>
+	 <Button onClick={handlePopupClose} color="primary">
+	   Stay
+	 </Button>
+	 <Button onClick={handleLogout} color="primary" autoFocus>
+	   Logout
+	 </Button>
+   </DialogActions>
+ </Dialog>
+
+</div>
+);
+}
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+
 function MenuAppBar(props) {
 
 	const classes = useStyles();
@@ -48,12 +107,6 @@ function MenuAppBar(props) {
 		setAnchorEl2(null);
 	};
 
-	const handleLogout = () => {
-		window.localStorage.clear();
-		setCurrentUser(null);
-		handleClose();
-		props.history.push(HomeRoute);
-	}
 
 	/* get User Context */
 	const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
@@ -144,12 +197,8 @@ function MenuAppBar(props) {
 									>
 										Settings
 									</MenuItem> */}
-									<MenuItem
-										onClick={handleLogout}
-										component={Link}
-										to={HomeRoute}
-									>
-										Logout
+									<MenuItem>
+										<Logout />
 									</MenuItem>
 								</Menu>
 							</Fragment>
@@ -202,5 +251,7 @@ function MenuAppBar(props) {
 		</div>
 	);
 }
+
+
 
 export default withRouter(MenuAppBar)

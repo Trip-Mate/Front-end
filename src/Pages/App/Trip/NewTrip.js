@@ -143,7 +143,7 @@ function NewTrip(props) {
 
 	const handleBudgetChange = (event, newValue) => {
 		setBudget(event.target.value);
-	};
+	};  
 
 	const onSubmit = async (data) => {
 		// Data to be sent to the server
