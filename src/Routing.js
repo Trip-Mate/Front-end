@@ -20,6 +20,7 @@ const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
 const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
 const MyTrips = lazy(() => import('./Pages/App/Trip/my-trips'))
+const TripPlan = lazy(() => import('./Pages/App/Trip/TripPlan/TripPlan'))
 
 // Route variables
 // Website variables
@@ -39,6 +40,8 @@ export const OverviewRoute = '/overview';
 export const NewTripRoute = '/trips/new-trip'
 export const SingleTripRoute = `/trips/:tripID`;
 export const MyTripsRoute = '/trips/my-trips';
+// Only for testing, still have to think about the TripPlan route
+export const TripPlanRoute = '/trips/:tripID/trip-plan';
 
 // Router
 function Routing() {
@@ -63,7 +66,8 @@ function Routing() {
 					setSingleTrip,
 				}}
 			>
-				<Route path={SingleTripRoute} component={SingleTrip} />
+				<Route path={TripPlanRoute} exact component={TripPlan} />
+				<Route path={SingleTripRoute} exact component={SingleTrip} />
 			</SingleTripContext.Provider>
 		</Switch>
 	);
