@@ -133,6 +133,10 @@ function NewTrip(props) {
 		},
 	});
 
+	/* getting user token */
+	const user = JSON.parse(localStorage.getItem('user'));
+	const token = user.token;
+
 	const handleCountryChange = (event, newValue) => {
 		setCountries(newValue);
 	};
@@ -154,10 +158,16 @@ function NewTrip(props) {
 		data.baseCurrency = baseCurrency;
 		data.budget = budget;
 		data.duration = duration;
-		console.log(data);
+
 		try {
-			const res = await axios.post('/trips', data);
-			console.log('res: ', res)
+			const options = {
+				headers: {
+					'x-auth-token': token
+				}
+			}
+
+			const res = await axios.post('/trips', data, options);
+			console.log('res: ', res);
 			if (res) {
 				setIsSuccess(true);
 				const tripID = res.data.trip._id;
