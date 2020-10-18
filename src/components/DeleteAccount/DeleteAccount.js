@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import axios from 'axios';
 import {HomeRoute} from '../../Routing';
 import CurrentUserContext from '../../contexts/current-user/current-user.context';
-import { withRouter } from 'react-router-dom';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -11,31 +10,17 @@ import { useForm } from 'react-hook-form';
 import {
 	makeStyles,
 	Button,
-	Modal,
 	TextField,
-	InputAdornment,
-	Typography,
-	IconButton,
-  Fade,
-  Backdrop
+	InputAdornment
 } from '@material-ui/core';
 
 /* Material UI icons*/
-import CancelIcon from '@material-ui/icons/Cancel';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
+import CustomModal from '../CustomModal/CustomModal';
 
-
-function getModalStyle() {
-
-	return {
-		bottom: `20%`,
-		left: `5%`,
-		transform: `translateY( -10%)`,
-	};
-}
 
 const useStyles = makeStyles((theme) => ({
 	paper: {
@@ -69,15 +54,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function SimpleModal(props) {
+const DeleteAccount = (props) => {
 	const classes = useStyles();
-	// getModalStyle is not a pure function, we roll the style only on the first render
-	const [modalStyle] = React.useState(getModalStyle);
-  const [open, setOpen] = React.useState(false);
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-  const [isSuccess, setIsSuccess] = React.useState(false)
-  
-  const { register, errors, handleSubmit } = useForm({
+  	const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  	const [isSuccess, setIsSuccess] = React.useState(false)
+
+  	const { register, errors, handleSubmit } = useForm({
 		mode: 'onSubmit',
 		reValidateMode: 'onChange',
 		defaultValues: {
@@ -85,24 +67,15 @@ function SimpleModal(props) {
 		},
 	});
 
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-  };
-  
   	const onSubmit = async (data) => {
 			try {
 				/* getting user token */
 				const user = JSON.parse(localStorage.getItem('user'));
-        const token = user.token;
+        		const token = user.token;
 				const password = data.password;
 				const options = {
 					headers: { 'x-auth-token': token },
 				};
-        
 				const res = await axios.post(
 					'/users/delete',
 					{
@@ -117,30 +90,14 @@ function SimpleModal(props) {
 					props.history.push(HomeRoute);
 					setCurrentUser(null);
 					window.localStorage.clear();
-					
 				}
 			} catch (error) {
 				console.log(error);
 			}
 		};
 
-  const modalBody = (
-		<Fade in={open}>
-			<div style={modalStyle} className={classes.paper}>
-				<IconButton
-					aria-label='cancel'
-					className={classes.cancelWrapper}
-					onClick={handleClose}
-				>
-					<CancelIcon className={classes.cancelButton} />
-				</IconButton>
-				<Typography component='h1' variant='h5'>
-					Delete Account
-				</Typography>
-				<p id='simple-modal-description' className={classes.description}>
-					You are about to permanently <span style={{ color: '#f50057' }}>DELETE</span> your account, if you
-					wish to proceed, please enter your password and click on delete.
-				</p>
+  	const modalBody = (
+			<>
 				<form
 					className={classes.form}
 					noValidate
@@ -185,35 +142,25 @@ function SimpleModal(props) {
 						Delete My Account
 					</Button>
 				</form>
-			</div>
-		</Fade>
+			</>
 	);
 
+	const description = (
+		<>
+			You are about to permanently <span style={{ color: '#f50057' }}>DELETE</span> your account, 
+			if you wish to proceed, please enter your password and click on delete.
+		</>
+	);
 	return (
-		<div>
-			<Button
-				onClick={handleOpen}
-				variant='contained'
-				color='secondary'
-				style={{ margin: '0.2rem' }}
-			>
-				Delete Account
-			</Button>
-			<Modal
-				open={open}
-				onClose={handleClose}
-				aria-labelledby='simple-modal-title'
-				aria-describedby='simple-modal-description'
-				closeAfterTransition
-				BackdropComponent={Backdrop}
-				BackdropProps={{
-					timeout: 500,
-				}}
-			>
-				{modalBody}
-			</Modal>
-		</div>
+		<CustomModal
+			buttonColor="secondary"
+			buttonTitle="Delete Account"
+			modalBody={modalBody}
+			header="Delete Account"
+			description={description}
+			closeIcon
+		/>
 	);
 }
 
-export default withRouter(SimpleModal)
+export default DeleteAccount;

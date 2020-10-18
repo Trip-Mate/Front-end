@@ -5,9 +5,9 @@ import CurrentUserContext from '../../../../contexts/current-user/current-user.c
 import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import EmailIcon from '@material-ui/icons/Email';
 import InfoIcon from '@material-ui/icons/Info';
-import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import Modal from '../../../../components/Modal/Modal';
+import EditProfile from '../../../../components/EditProfile/EditProfile';
+import DeleteAccount from '../../../../components/DeleteAccount/DeleteAccount';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -113,7 +113,7 @@ const Profile = () => {
                                 <Avatar
                                     variant='rounded'
                                     className={classes.large}
-                                    src={`${currentUser.avatar}`}
+                                    src={`${currentUser?.avatar}`}
                                 ></Avatar>
                             </div>
 							
@@ -158,9 +158,7 @@ const Profile = () => {
                                     </span>
                                 </div>
                                 <div>
-                                    <Button variant="outlined">
-                                        <EditIcon fontSize="small"/> Edit
-                                    </Button>
+                                    <EditProfile />
                                 </div>
                             </div>
 							<Table className={classes.table}>
@@ -235,7 +233,7 @@ const Profile = () => {
 						>
 							Disable Account
 						</Button>
-						<Modal />
+						<DeleteAccount />
 					</Grid>
 				</Grid>
 			</Container>
