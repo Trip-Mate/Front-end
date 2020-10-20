@@ -2,12 +2,41 @@ import React, { Fragment, useContext, useEffect } from 'react';
 
 import axios from 'axios';
 
+import { makeStyles } from '@material-ui/core/styles';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import DirectionsIcon from '@material-ui/icons/Directions';
+import ExploreIcon from '@material-ui/icons/Explore';
+import LocalMallIcon from '@material-ui/icons/LocalMall';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+
 import SingleTripContext from '../../../contexts/single-trip/single-trip.context';
+import CurrentUserContext from '../../../contexts/current-user/current-user.context';
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+	  width: '100vw',
+	  height: 'auto',
+	  backgroundColor: theme.palette.background.paper,
+	},
+}));
 
 const SingleTrip = ({ match }) => {
 
 	/* getting single trip context */
 	const { singleTrip, setSingleTrip } = useContext(SingleTripContext);
+
+	/* getting name from current user */
+	const { currentUser: { name }} = useContext(CurrentUserContext);
+
+	const classes = useStyles();
 
 	/* getting single trip data */
 	useEffect(() => {
@@ -39,17 +68,73 @@ const SingleTrip = ({ match }) => {
 			}
 		})();
 	}, [setSingleTrip]);
+
+	console.log(singleTrip);
+
+	const { title, budget, countries, baseCurrency, from, createdAt} = singleTrip;
   
 	return (
-			<Fragment>
-				<li>{singleTrip.title}</li>
-				<li>{singleTrip.from}</li>
-				<li>{singleTrip.to}</li>
-				<li>{singleTrip.budget}</li>
-				<li>{singleTrip.baseCurrency}</li>
-				<img src={singleTrip.backgroundImage} />
-			</Fragment>
-		);
+			<List 
+			component="nav"
+			aria-labelledby="nested-list-subheader"
+			subheader={
+			  <ListSubheader color="primary" component="h2" id="nested-list-subheader">
+				Single Trip View
+			  </ListSubheader>
+			}
+			className={classes.root}
+			>
+			  <ListItem>
+				<ListItemAvatar>
+				  <Avatar>
+					<AccountCircleIcon />
+				  </Avatar>
+				</ListItemAvatar>
+				<ListItemText primary="Travellers" secondary={name} />
+			  </ListItem>
+			  <ListItem>
+				<ListItemAvatar>
+				  <Avatar>
+					<EventNoteIcon />
+				  </Avatar>
+				</ListItemAvatar>
+				<ListItemText primary="Quick Notes" secondary={createdAt} />
+			  </ListItem>
+			  <ListItem>
+				<ListItemAvatar>
+				  <Avatar>
+					<DirectionsIcon />
+				  </Avatar>
+				</ListItemAvatar>
+				<ListItemText primary="Trip Plan" secondary={title} />
+			  </ListItem>
+			  <ListItem>
+				<ListItemAvatar>
+				  <Avatar>
+					<ExploreIcon />
+				  </Avatar>
+				</ListItemAvatar>
+				<ListItemText primary="Map" secondary={countries} />
+			  </ListItem>
+			  <ListItem>
+				<ListItemAvatar>
+				  <Avatar>
+					<LocalMallIcon />
+				  </Avatar>
+				</ListItemAvatar>
+				<ListItemText primary="Briefing" secondary={from} />
+			  </ListItem>
+			  <ListItem>
+				<ListItemAvatar>
+				  <Avatar>
+					<LockOpenIcon />
+				  </Avatar>
+				</ListItemAvatar>
+				<ListItemText primary="Wallet" secondary={`${baseCurrency} ${budget}`} />
+			  </ListItem>
+			</List>
+		  );
 }
+
 
 export default SingleTrip;
