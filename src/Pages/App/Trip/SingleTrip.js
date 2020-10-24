@@ -1,8 +1,12 @@
-import React, { Fragment, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import axios from 'axios';
 
+import { Link } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
+
+/* Components */
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -10,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 
+/* Icons */
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import DirectionsIcon from '@material-ui/icons/Directions';
@@ -17,6 +22,7 @@ import ExploreIcon from '@material-ui/icons/Explore';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
+/* Contexts */
 import SingleTripContext from '../../../contexts/single-trip/single-trip.context';
 import CurrentUserContext from '../../../contexts/current-user/current-user.context';
 
@@ -33,7 +39,7 @@ const SingleTrip = ({ match }) => {
 	/* getting single trip context */
 	const { singleTrip, setSingleTrip } = useContext(SingleTripContext);
 
-	/* getting name from current user */
+	/* getting name from current user context */
 	const { currentUser: { name }} = useContext(CurrentUserContext);
 
 	const classes = useStyles();
@@ -64,12 +70,31 @@ const SingleTrip = ({ match }) => {
 				setSingleTrip(trip);
 
 			} catch (error) {
-				console.log('Error', error.message);
+				console.log('Error getting trip Data', error.message);
 			}
 		})();
-	}, [setSingleTrip]);
+	}, []);
 
-	console.log(singleTrip);
+	const onDataSubmit = async () => {
+		try {
+			/* getting user token */
+			const user = JSON.parse(localStorage.getItem('user'));
+			const token = user.token;
+
+			const data = match.params;
+
+			const options = {
+				headers: {
+					'x-auth-token': token
+				}
+			}
+
+			const res = await axios.post(`${match.url}/trip-plan`, data, options);
+			
+		} catch (error) {
+			console.log('Error sending data', error.message);
+		}
+	};
 
 	const { title, budget, countries, baseCurrency, from, createdAt} = singleTrip;
   
@@ -100,11 +125,16 @@ const SingleTrip = ({ match }) => {
 				</ListItemAvatar>
 				<ListItemText primary="Quick Notes" secondary={createdAt} />
 			  </ListItem>
-			  <ListItem>
+			  <ListItem 
+			  button 
+			  component={Link} 
+			  to={`${match.url}/trip-plan`}
+			  onClick={onDataSubmit}
+			  >
 				<ListItemAvatar>
-				  <Avatar>
-					<DirectionsIcon />
-				  </Avatar>
+					<Avatar>
+						<DirectionsIcon />
+					</Avatar>
 				</ListItemAvatar>
 				<ListItemText primary="Trip Plan" secondary={title} />
 			  </ListItem>
@@ -131,7 +161,7 @@ const SingleTrip = ({ match }) => {
 				  </Avatar>
 				</ListItemAvatar>
 				<ListItemText primary="Wallet" secondary={`${baseCurrency} ${budget}`} />
-			  </ListItem>
+			  </ListItem>	  
 			</List>
 		  );
 }
