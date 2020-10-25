@@ -52,7 +52,7 @@ const TripPlan = ({ match }) => {
 		style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center', contentVisibility: 'auto' }}
 		>
 			{
-				!days.length > 0 ? (
+				!days?.length > 0 ? (
 					<h2>There are no days in here 😖</h2>
 				) : (
 					days.map((day, idx) => (
