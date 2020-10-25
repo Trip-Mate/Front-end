@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import axios from 'axios';
 import {HomeRoute} from '../../Routing';
 import CurrentUserContext from '../../contexts/current-user/current-user.context';
+import { withRouter } from 'react-router-dom';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
@@ -83,6 +84,7 @@ const DeleteAccount = (props) => {
 					},
 					options
 				);
+				console.log(res.status)
 				if (res.status === 200) {
 					// console.log(res)
 					setIsSuccess(true);
@@ -163,4 +165,4 @@ const DeleteAccount = (props) => {
 	);
 }
 
-export default DeleteAccount;
+export default withRouter(DeleteAccount);

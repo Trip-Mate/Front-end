@@ -252,7 +252,8 @@ function NewTrip(props) {
 											required: 'Departure date is required',
 											validate: (value) => null,
 											pattern: {
-												value: /^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}_?))$/,
+												// value: /^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}_?))$/,
+												value: /[^\d]+/gi,
 												message: 'Invalid date',
 											},
 										})}
