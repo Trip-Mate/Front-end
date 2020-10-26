@@ -10,6 +10,9 @@ import EditProfile from '../../../../components/EditProfile/EditProfile';
 import DeleteAccount from '../../../../components/DeleteAccount/DeleteAccount';
 
 const useStyles = makeStyles((theme) => ({
+    container: {
+        marginBottom: '65px',
+    },
     paper: {
         marginTop: theme.spacing(2),
         padding: theme.spacing(4)
@@ -105,7 +108,7 @@ const Profile = () => {
         }
     }, [currentUser]);
     return (
-			<Container>
+			<Container className={classes.container}>
 				<Grid container spacing={1} alignItems='center' justify='center'>
 					<Grid item xs={6} sm={3}>
 						<Paper className={classes.paper}>

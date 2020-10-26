@@ -8,6 +8,7 @@ import Navbar from './components/layout/Navbar2';
 
 /* User Context */
 import CurrentUserContext from './contexts/current-user/current-user.context';
+import BottomNavigation from './components/layout/BottomNavigation';
 
 import './App.css';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -26,20 +27,23 @@ const App = () => {
 			setCurrentUser(data.user);
 		}
 	}, []);
-	return(
-		<Router>
-			<CssBaseline />
-			<CurrentUserContext.Provider value={{
-				currentUser,
-				setCurrentUser
-			}}>
-				<Navbar />
-				<Suspense fallback={<Spinner />}>
-					<Routing />
-				</Suspense>
-			</CurrentUserContext.Provider>
-		</Router>
-	)
+	return (
+			<Router>
+				<CssBaseline />
+				<CurrentUserContext.Provider
+					value={{
+						currentUser,
+						setCurrentUser,
+					}}
+				>
+					<Navbar />
+					<Suspense fallback={<Spinner />}>
+						<Routing />
+						<BottomNavigation />
+					</Suspense>
+				</CurrentUserContext.Provider>
+			</Router>
+	);
 };
 
 export default App;

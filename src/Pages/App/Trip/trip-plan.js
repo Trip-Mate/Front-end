@@ -49,7 +49,7 @@ const TripPlan = ({ match }) => {
 
 		/* Demo Container */
         <section
-		style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center', contentVisibility: 'auto' }}
+		style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', alignItems: 'center', contentVisibility: 'auto', marginBottom: '60px', }}
 		>
 			{
 				!days?.length > 0 ? (
