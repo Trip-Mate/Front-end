@@ -1,22 +1,20 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import {
-	HomeRoute,
-	FeaturesRoute,
-	DocsRoute,
-	ContactRoute,
-	LoginRoute,
-	RegisterRoute,
-	ProfileRoute,
-	OverviewRoute,
-} from '../../Routing';
+import React, { useContext } from 'react';
 
+// React Router + utils
+import { withRouter } from 'react-router-dom';
+import { OverviewRoute } from '../../Routing';
+
+// User Context
+import CurrentUserContext from '../../contexts/current-user/current-user.context'
+
+// Material-UI
 import { makeStyles } from '@material-ui/core/styles';
 import { BottomNavigation, BottomNavigationAction, Button } from '@material-ui/core/';
 
+// Material-UI Icons
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HomeIcon from '@material-ui/icons/Home';
-import EditIcon from '@material-ui/icons/Edit';
+// import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles({
 	root: {
@@ -32,12 +30,13 @@ const useStyles = makeStyles({
 	}
 });
 
-
-
 const BottomNavigationTrips = (props) => {
-	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
-	return (
+	const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+	const classes = useStyles();
+	
+	return currentUser ? (
+		// Bottom navigation bar
 		<BottomNavigation
 			value={value}
 			onChange={(event, newValue) => {
@@ -46,6 +45,7 @@ const BottomNavigationTrips = (props) => {
 			showLabels
 			className={classes.root}
 		>
+			{/* Nav buttons */}
 			<BottomNavigationAction
 				label='Back'
 				icon={<ArrowBackIcon />}
@@ -59,6 +59,7 @@ const BottomNavigationTrips = (props) => {
 				component={Button}
 				onClick={() => props.history.push(OverviewRoute)}
 			/>
+			{/* Extra button in case we need one more */}
 			{/* <BottomNavigationAction
 				label='Edit'
 				icon={<EditIcon />}
@@ -68,7 +69,7 @@ const BottomNavigationTrips = (props) => {
         className={classes.button}
 			/> */}
 		</BottomNavigation>
-	);
+	) : null;
 };
 
 export default withRouter(BottomNavigationTrips);
