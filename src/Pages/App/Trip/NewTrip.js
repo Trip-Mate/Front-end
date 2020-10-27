@@ -1,8 +1,11 @@
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
+
 // Countries for the Autocomplete field
 import countriesWithID from '../../../countries';
 import currencies from '../../../currencies';
+
+// User context
 import currentUserContext from '../../../contexts/current-user/current-user.context';
 
 // Moment JS
@@ -11,9 +14,6 @@ import MomentUtils from '@date-io/moment';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
-
-/* React Hook Form DevTools to help debug forms with validation. */
-import { DevTool } from '@hookform/devtools';
 
 /* Material UI core*/
 import {
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
-		marginBottom: '55px'
+		marginBottom: '55px',
 	},
 	paper: {
 		margin: theme.spacing(1, 0),
@@ -96,20 +96,22 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+// New trip component
 function NewTrip(props) {
-	const { currentUser } = useContext(currentUserContext);
+	const classes = useStyles();
 
+	// Setting the base for the necessary fields for the trip
+	const { currentUser } = useContext(currentUserContext);
 	const [fromDate, setFromDate] = React.useState(moment().startOf('day'));
 	const [toDate, setToDate] = React.useState(moment().startOf('day'));
 	const [countries, setCountries] = React.useState();
-	// TODO: Change the initial state of base currency when the user has the base currency set
 	const [baseCurrency, setBaseCurrency] = React.useState(
 		currentUserContext.baseCurrency || 'EUR'
 	);
 	const [budget, setBudget] = React.useState();
 	const [isSuccess, setIsSuccess] = React.useState(false);
-	const classes = useStyles();
 
+	// Calculates the days display for the badge element
 	const tripDurationInDays = (from, to) => {
 		let duration = moment(to)
 			.startOf('day')
@@ -120,7 +122,8 @@ function NewTrip(props) {
 
 	const duration = tripDurationInDays(fromDate, toDate);
 
-	const { register, errors, handleSubmit, control, watch } = useForm({
+	// Sets validation handler
+	const { register, errors, handleSubmit } = useForm({
 		mode: 'onSubmit',
 		reValidateMode: 'all',
 		defaultValues: {
@@ -138,6 +141,7 @@ function NewTrip(props) {
 	const user = JSON.parse(localStorage.getItem('user'));
 	const token = user.token;
 
+	// Form change handlers
 	const handleCountryChange = (event, newValue) => {
 		setCountries(newValue);
 	};
@@ -148,8 +152,9 @@ function NewTrip(props) {
 
 	const handleBudgetChange = (event, newValue) => {
 		setBudget(event.target.value);
-	};  
+	};
 
+	// Submit handler
 	const onSubmit = async (data) => {
 		// Data to be sent to the server
 		data.user = currentUser._id;
@@ -161,18 +166,18 @@ function NewTrip(props) {
 		data.duration = duration;
 
 		try {
+			// Setting header for axios
 			const options = {
 				headers: {
-					'x-auth-token': token
-				}
-			}
-
+					'x-auth-token': token,
+				},
+			};
+			// Sending data to the back-end
 			const res = await axios.post('/trips', data, options);
 			console.log('res: ', res);
-			if (res) {
+			if (res.status === 201) {
 				setIsSuccess(true);
 				const tripID = res.data.trip._id;
-				// TODO: Think where the user should go after form submission
 				// TODO: Save trip data to the state
 				// TODO: Update user data with the new trip id to the userState
 				setTimeout(() => {
@@ -188,9 +193,9 @@ function NewTrip(props) {
 	};
 	return (
 		<Container component='main' maxWidth='xs'>
-
 			<div className={classes.container}>
 				<Paper elevation={3} className={classes.paper}>
+					{/* Success alert component */}
 					{isSuccess ? (
 						<Alert severity='success' className={classes.submit}>
 							Enjoy your trip!
@@ -206,7 +211,7 @@ function NewTrip(props) {
 							New Trip
 						</Typography>
 					</div>
-
+					{/* The form */}
 					<form
 						className={classes.form}
 						noValidate
@@ -294,6 +299,7 @@ function NewTrip(props) {
 										</Alert>
 									)}
 								</div>
+								{/* Duration display */}
 								<div className={classes.durationIconContainer}>
 									<Badge
 										badgeContent={
@@ -346,7 +352,6 @@ function NewTrip(props) {
 								/>
 							)}
 						/>
-						{/* {(!!countries && countries.length !== 0) || 'this error down'} */}
 						{!!errors.countryPicker && (
 							<Alert severity='error' className={classes.error}>
 								{errors.countryPicker.message}
@@ -419,7 +424,7 @@ function NewTrip(props) {
 								color='primary'
 								className={classes.submit}
 							>
-								New trip
+								Create trip
 							</Button>
 						) : null}
 					</form>
