@@ -68,7 +68,7 @@ const Logout = withRouter((props) => {
 		// Close popup
 		handlePopupClose();
 		// Closes user navigation menu
-		props.handleClose();
+		props.handleClose()
 		// Redirect to Home
 		props.history.push(HomeRoute);
 	};
@@ -83,12 +83,7 @@ const Logout = withRouter((props) => {
 	return (
 		<div>
 			{/* Menuitem in profile menu */}
-			<MenuItem
-				onClick={handleClickOpen}
-				style={{ textAlign: 'left', paddingLeft: 0 }}
-			>
-				Logout
-			</MenuItem>
+			<MenuItem onClick={handleClickOpen} style={{ textAlign: 'left', paddingLeft: 0 }}>Logout</MenuItem>
 			{/* The popup element */}
 			<Dialog
 				TransitionComponent={Transition}
@@ -111,7 +106,7 @@ const Logout = withRouter((props) => {
 			</Dialog>
 		</div>
 	);
-});
+})
 
 // Modal move up transition
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -221,25 +216,25 @@ function MenuAppBar(props) {
 										Profile
 									</MenuItem>
 									<MenuItem>
-										<Logout handleClose={handleClose} />
+										<Logout handleClose={ handleClose } />
 									</MenuItem>
 								</Menu>
 							</Fragment>
 						) : (
-							// If logged out
-							<Fragment>
-								{/* Right side icon wrapper */}
+								// If logged out
+								<Fragment>
+									{/* Right side icon wrapper */}
 								<IconButton
 									aria-label='account of current user'
 									aria-controls='simple-menu'
 									aria-haspopup='true'
 									onClick={(e) => setAnchorEl2(e.currentTarget)}
 									color='inherit'
-								>
-									{/* The icon itself */}
+									>
+										{/* The icon itself */}
 									<AccountCircle />
-								</IconButton>
-								{/* Right side drop down menu and menu items */}
+									</IconButton>
+									{/* Right side drop down menu and menu items */}
 								<Menu
 									id='simple-menu'
 									anchorEl={anchorEl2}
