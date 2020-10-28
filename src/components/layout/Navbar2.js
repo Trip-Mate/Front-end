@@ -35,6 +35,9 @@ import {
 // Material-UI Icons
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PersonIcon from '@material-ui/icons/Person';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -50,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
 		width: theme.spacing(4),
 		height: theme.spacing(4),
 	},
+	icon: {
+		marginRight: '5px',
+	}
 }));
 
 // Logout Modal
@@ -213,28 +219,30 @@ function MenuAppBar(props) {
 										component={Link}
 										to={ProfileRoute}
 									>
+										<PersonIcon className={classes.icon} fontSize='small' />
 										Profile
 									</MenuItem>
 									<MenuItem>
-										<Logout handleClose={ handleClose } />
+										<ExitToAppIcon className={classes.icon} fontSize='small' />
+										<Logout handleClose={handleClose} />
 									</MenuItem>
 								</Menu>
 							</Fragment>
 						) : (
-								// If logged out
-								<Fragment>
-									{/* Right side icon wrapper */}
+							// If logged out
+							<Fragment>
+								{/* Right side icon wrapper */}
 								<IconButton
 									aria-label='account of current user'
 									aria-controls='simple-menu'
 									aria-haspopup='true'
 									onClick={(e) => setAnchorEl2(e.currentTarget)}
 									color='inherit'
-									>
-										{/* The icon itself */}
+								>
+									{/* The icon itself */}
 									<AccountCircle />
-									</IconButton>
-									{/* Right side drop down menu and menu items */}
+								</IconButton>
+								{/* Right side drop down menu and menu items */}
 								<Menu
 									id='simple-menu'
 									anchorEl={anchorEl2}
@@ -254,14 +262,17 @@ function MenuAppBar(props) {
 										onClick={handleClose}
 										component={Link}
 										to={LoginRoute}
-									>
+										>
+											<PersonIcon className={classes.icon} fontSize='small' />
 										Login
 									</MenuItem>
+
 									<MenuItem
 										onClick={handleClose}
 										component={Link}
 										to={RegisterRoute}
 									>
+										<PersonAddIcon className={classes.icon} fontSize='small' />
 										Register
 									</MenuItem>
 								</Menu>
