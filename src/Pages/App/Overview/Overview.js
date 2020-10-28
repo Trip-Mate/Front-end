@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     top: '56px',
     backgroundSize: 'cover',
     width: '100%',
-    height: '94vh',
+    height: 'calc(100% - 56px)',
     // filter: 'grayscale(100%)',
     opacity: '0.4',
     

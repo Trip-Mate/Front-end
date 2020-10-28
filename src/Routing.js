@@ -3,8 +3,10 @@ import React, { useState, lazy } from 'react';
 import { Route, withRouter, Switch } from 'react-router-dom';
 
 import SingleTripContext from './contexts/single-trip/single-trip.context'
+
 // Website routes
 import Home from './Pages/Website/Home/Home';
+import TripRouting from './TripRouting';
 
 const Features = lazy(() => import('./Pages/Website/Features/Features'));
 const Docs = lazy(() => import('./Pages/Website/Docs/Docs'));
@@ -18,7 +20,6 @@ const Reset = lazy(() => import('./Pages/Website/User/Reset/Reset'));
 const Profile = lazy(() => import('./Pages/Website/User/Profile/Profile'));
 const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
-const SingleTrip = lazy(() => import('./Pages/App/Trip/SingleTrip'))
 const MyTrips = lazy(() => import('./Pages/App/Trip/my-trips'))
 
 // Route variables
@@ -37,12 +38,13 @@ export const ResetRoute = '/reset/:resetPasswordToken';
 export const ProfileRoute = '/user/profile'
 export const OverviewRoute = '/overview';
 export const NewTripRoute = '/trips/new-trip'
-export const SingleTripRoute = `/trips/:tripID`;
 export const MyTripsRoute = '/trips/my-trips';
 
 // Router
 function Routing() {
+	
 	const [ singleTrip, setSingleTrip ] = useState({});
+
 	return (
 		<Switch>
 			<Route path={HomeRoute} exact component={Home} />
@@ -63,7 +65,7 @@ function Routing() {
 					setSingleTrip,
 				}}
 			>
-				<Route path={SingleTripRoute} component={SingleTrip} />
+				<TripRouting />
 			</SingleTripContext.Provider>
 		</Switch>
 	);
