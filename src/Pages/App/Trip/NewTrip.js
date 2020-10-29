@@ -48,9 +48,10 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
+		marginBottom: '55px'
 	},
 	paper: {
-		margin: theme.spacing(2, 0),
+		margin: theme.spacing(1, 0),
 		padding: theme.spacing(2, 2),
 	},
 	titleContainer: {
@@ -187,7 +188,6 @@ function NewTrip(props) {
 	};
 	return (
 		<Container component='main' maxWidth='xs'>
-			<DevTool control={control} />
 
 			<div className={classes.container}>
 				<Paper elevation={3} className={classes.paper}>
@@ -333,7 +333,7 @@ function NewTrip(props) {
 									{...params}
 									variant='outlined'
 									label='Countries'
-									helperText='The countries you want to visit on your trip'
+									// helperText='The countries you want to visit on your trip'
 									inputRef={register({
 										validate: {
 											isUndefined: () =>
@@ -368,7 +368,7 @@ function NewTrip(props) {
 							label='Trip Budget'
 							type='number'
 							name='budget'
-							helperText='Estimated budget for the trip'
+							// helperText='Estimated budget for the trip'
 							onChange={handleBudgetChange}
 							error={false}
 						/>
@@ -392,7 +392,7 @@ function NewTrip(props) {
 									variant='outlined'
 									name='baseCurrency'
 									label='Base Currency'
-									helperText='Your currency that you use'
+									// helperText='Your currency that you use'
 									inputRef={register({
 										validate: {
 											isUndefined: () =>
