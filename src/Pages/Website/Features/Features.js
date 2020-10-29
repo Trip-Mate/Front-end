@@ -68,17 +68,6 @@ function Features() {
 		},
 	});
 
-
-	useEffect(() => {
-		axios.default.mongoose('Rate')
-		.then(function(res)  {
-			console.log(res)
-		// setBaseCurrency([data.base, ...Object.keys(data.rates)])
-		})
-	}, []);
-
-
-
 	return (
 	<Container  component='main' maxWidth='xs'>
 	<div> 		
