@@ -19,7 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CurrentUserContext from '../../contexts/current-user/current-user.context';
 import { LoginRoute, ProfileRoute, RegisterRoute } from '../../Routing';
 import { AccountCircle } from '@material-ui/icons';
-import { Avatar, Menu, MenuItem } from '@material-ui/core';
+import { Avatar, Button, Dialog, DialogActions, DialogTitle, Menu, MenuItem, Slide } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -41,12 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const NavBar = (props) => {
 	const classes = useStyles();
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const [rightAnchorEl, setRightAnchorEl] = useState(null);
 	const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
 	const history = useHistory();
+	const [ logoutOpen, setLogoutOpen] = useState(false);
 
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
@@ -60,10 +65,15 @@ const NavBar = (props) => {
 		setRightAnchorEl(null);
 	}
 
+	const logoutClose = () => {
+		setLogoutOpen(false);
+		handleRightMenuClose();
+	}
 	const handleLogout = () => {
 		window.localStorage.clear();
 		setCurrentUser(null);
-		handleRightMenuClose()
+		setLogoutOpen(false);
+		handleRightMenuClose();
 		history.push(LoginRoute);
 	};
 
@@ -151,7 +161,7 @@ const NavBar = (props) => {
 										Profile
 									</MenuItem>
 									<MenuItem
-										onClick={handleLogout}
+										onClick={() => setLogoutOpen(true)}
 									>
 										Logout
 									</MenuItem>
@@ -213,6 +223,25 @@ const NavBar = (props) => {
 			>
 				{drawer}
 			</Drawer>
+			<>
+				<Dialog
+					TransitionComponent={Transition}
+					open={logoutOpen}
+					onClose={logoutClose}
+					aria-labelledby="alert-dialog-slide-title"
+					aria-describedby="alert-dialog-slide-description"
+				>
+				<DialogTitle id="alert-dialog-slide-title">{" Are you sure you want to leave?"}</DialogTitle>
+				<DialogActions>
+					<Button onClick={logoutClose} color="primary">
+						Stay
+					</Button>
+					<Button onClick={handleLogout} color="primary" autoFocus>
+						Logout
+					</Button>
+				</DialogActions>
+				</Dialog>
+			</>
 		</div>
 	);
 }
