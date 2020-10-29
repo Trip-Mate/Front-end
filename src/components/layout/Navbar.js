@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import {Link } from "react-router-dom";
-import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
+import {Link, useHistory } from "react-router-dom";
 
 // Material Imports
 import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import HomeIcon from '@material-ui/icons/Home';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import EmailIcon from '@material-ui/icons/Email';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import CurrentUserContext from '../../contexts/current-user/current-user.context';
+import { LoginRoute, ProfileRoute, RegisterRoute } from '../../Routing';
+import { AccountCircle } from '@material-ui/icons';
+import { Avatar, Menu, MenuItem } from '@material-ui/core';
 
 const drawerWidth = 240;
 
@@ -41,15 +41,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ResponsiveDrawer(props) {
+const NavBar = (props) => {
 	const classes = useStyles();
-	const theme = useTheme();
 	const [mobileOpen, setMobileOpen] = useState(false);
+	const [rightAnchorEl, setRightAnchorEl] = useState(null);
+	const {currentUser, setCurrentUser} = useContext(CurrentUserContext);
+	const history = useHistory();
 
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
 	};
 
+	const handleRightMenuClick = (e) => {
+		setRightAnchorEl(e.currentTarget);
+	};
+
+	const handleRightMenuClose = () => {
+		setRightAnchorEl(null);
+	}
+
+	const handleLogout = () => {
+		window.localStorage.clear();
+		setCurrentUser(null);
+		handleRightMenuClose()
+		history.push(LoginRoute);
+	};
 
 	const drawer = (
 		<div onClick={handleDrawerToggle}>
@@ -96,6 +112,95 @@ function ResponsiveDrawer(props) {
 					<Typography variant='h6' className={classes.title} noWrap>
 						Travel Mate
 					</Typography>
+					<div>
+						{currentUser ? (
+							<>
+								<IconButton
+									aria-label='account of current user'
+									aria-controls='simple-menu'
+									aria-haspopup='true'
+									color='inherit'
+									onClick={handleRightMenuClick}
+								>
+									<Avatar
+										alt={currentUser.name}
+										src={`https:${currentUser.avatar}`}
+										className={classes.small}
+									/>
+								</IconButton>
+								<Menu
+									id='simple-menu'
+									anchorOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									anchorEl={rightAnchorEl}
+									keepMounted
+									transformOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									open={Boolean(rightAnchorEl)}
+									onClose={handleRightMenuClose}
+								>
+									<MenuItem
+										component={Link}
+										to={ProfileRoute}
+										onClick={handleRightMenuClose}
+									>
+										Profile
+									</MenuItem>
+									<MenuItem
+										onClick={handleLogout}
+									>
+										Logout
+									</MenuItem>
+								</Menu>
+							</>
+						) : (
+							<>
+								<IconButton
+									aria-label='account of current user'
+									aria-controls='simple-menu'
+									aria-haspopup='true'
+									color='inherit'
+									onClick={handleRightMenuClick}
+								>
+									<AccountCircle />
+								</IconButton>
+								<Menu
+									id='simple-menu'
+									anchorOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									keepMounted
+									transformOrigin={{
+										vertical: 'top',
+										horizontal: 'right',
+									}}
+									anchorEl={rightAnchorEl}
+									open={Boolean(rightAnchorEl)}
+									onClose={handleRightMenuClose}
+								>
+									<MenuItem
+										component={Link}
+										to={LoginRoute}
+										onClick={handleRightMenuClose}
+									>
+										Login
+									</MenuItem>
+									<MenuItem
+										component={Link}
+										to={RegisterRoute}
+										onClick={handleRightMenuClose}
+									>
+										Register
+									</MenuItem>
+								</Menu>
+							</>
+						)}
+					</div>
 				</Toolbar>
 			</AppBar>
 			<Drawer
@@ -112,6 +217,4 @@ function ResponsiveDrawer(props) {
 	);
 }
 
-export default ResponsiveDrawer;
-
-
+export default NavBar;

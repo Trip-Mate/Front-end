@@ -4,7 +4,7 @@ import Spinner from './components/Spinner/Spinner';
 
 import { BrowserRouter as Router } from 'react-router-dom';
 import Routing from './Routing.js';
-import Navbar from './components/layout/Navbar2';
+import Navbar from './components/layout/Navbar';
 
 /* User Context */
 import CurrentUserContext from './contexts/current-user/current-user.context';
