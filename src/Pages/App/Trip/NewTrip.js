@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import axios from 'axios';
 
-// Countries for the Autocomplete field
+// Countries and currencies for the Autocomplete field
 import countriesWithID from '../../../countries';
 import currencies from '../../../currencies';
 
@@ -26,6 +26,7 @@ import {
 	Badge,
 	Paper,
 } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 // Necessary imports for date pickers
 import {
@@ -39,7 +40,7 @@ import WbSunnyIcon from '@material-ui/icons/WbSunny';
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+
 
 // Styles
 const useStyles = makeStyles((theme) => ({
