@@ -70,7 +70,7 @@ const NavBar = (props) => {
 		handleRightMenuClose();
 	}
 	const handleLogout = () => {
-		window.localStorage.clear();
+		localStorage.clear();
 		setCurrentUser(null);
 		setLogoutOpen(false);
 		handleRightMenuClose();
