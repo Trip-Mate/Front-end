@@ -7,17 +7,21 @@ import axios from 'axios';
 /* Date format to be YYYY-MM */
 import moment from 'moment';
 
+/* Tab */
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+
 /* Material UI */
 import { makeStyles } from '@material-ui/core/styles';
 import {
 	GridList,
 	GridListTile,
 	GridListTileBar,
-	ListSubheader,
 	IconButton,
 	Link,
-	ButtonGroup,
-	Button,
 	Typography,
 } from '@material-ui/core';
 
@@ -32,12 +36,13 @@ import { NewTripRoute } from '../../../Routing';
 
 /* Styling Components */
 const useStyles = makeStyles((theme) => ({
+
 	root: {
 		display: 'flex',
 		flexWrap: 'wrap',
 		flexDirection: 'column',
 		alignItems: 'flex-start',
-		overflow: 'hidden',
+		/* overflow: 'hidden', */
 		backgroundColor: theme.palette.background.paper,
 		paddingBottom: '50px'
 	},
@@ -71,10 +76,61 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+function TabPanel(props) {
+	const { children, value, index, ...other } = props;
+
+	return (
+		<div
+		role="tabpanel"
+		hidden={value !== index}
+		id={`nav-tabpanel-${index}`}
+		aria-labelledby={`nav-tab-${index}`}
+		{...other}
+		>
+		{value === index && (
+			<Box p={2}>
+			<Typography>{children}</Typography>
+			</Box>
+		)}
+		</div>
+	);
+};
+
+  TabPanel.propTypes = {
+	children: PropTypes.node,
+	index: PropTypes.any.isRequired,
+	value: PropTypes.any.isRequired,
+  };
+  
+  function a11yProps(index) {
+	return {
+	  id: `nav-tab-${index}`,
+	  'aria-controls': `nav-tabpanel-${index}`,
+	};
+  };
+
+  function LinkTab(props) {
+	return (
+	  <Tab
+		component="a"
+		onClick={(event) => {
+		  event.preventDefault();
+		}}
+		{...props}
+	  />
+	);
+  }
+
 const MyTrips = () => {
 
 	/* getting user trips context */
 	const [ userTrips, setUserTrips ] = useState([]);
+
+	/* Handle Tab View */
+	const [ value, setValue] = useState(0);
+	const handleChange = (event, newValue) => {
+		setValue(newValue);
+	};
 
 	let history = useHistory();
 
@@ -108,45 +164,35 @@ const MyTrips = () => {
 			}
 		})();
 	}, [setUserTrips]);
-
+	
+	/* Filtering trips by end date */
+	let upcomingTrips = (trip) => ( (new Date(trip.to).getTime()) > (new Date().getTime()) );
+	let pastTrips = (trip) => ( (new Date(trip.to).getTime()) < (new Date().getTime()) );
+	function filterTripsByDate(value) {
+		return value === 0 ? upcomingTrips : pastTrips
+	};
 
 	return (
 		<div className={classes.root}>
-			<ButtonGroup
-				className={classes.buttonGroup}
-				variant='text'
-				color='primary'
-				aria-label='text primary button group'
-			>
-				<Button className={classes.button}>Future trips</Button>
-				<Button className={classes.button}>Past trips</Button>
-			</ButtonGroup>
-
-			{/* <GridListTile cols={1} style={{ height: 'auto' }}>
-				<ListSubheader
-					color='primary'
-					className={classes.title}
-					component='div'
+			<AppBar position="sticky" color="inherit">
+				<Tabs
+				variant="fullWidth"
+				value={value}
+				onChange={handleChange}
+				aria-label="nav tabs example"
+				textColor="secondary"
 				>
-					Current Trips
-				</ListSubheader>
-			</GridListTile>
+				<LinkTab label="Upcoming Trips" {...a11yProps(0)} />
+				<LinkTab label="Past Trips" {...a11yProps(1)} />
+				</Tabs>
+			</AppBar>
 
-			<GridListTile cols={1} style={{ height: 'auto' }}>
-				<ListSubheader
-					color='primary'
-					className={classes.title}
-					component='div'
-				>
-					Past Trips
-				</ListSubheader>
-			</GridListTile> */}
 			<GridList cellHeight={180} className={classes.gridList}>
-				{/* Navigation Bar */}
 
 				{/* Trips Collection */}
 
-				{!userTrips.length ? (
+				{
+				!userTrips.length ? (
 					<div style={{ width: '100%', position: 'absolute', top: '20vh' }}>
 						<Alert severity='info'>
 							{/* Link to redirect the user to Create New Trip Page  */}
@@ -159,7 +205,9 @@ const MyTrips = () => {
 						</Alert>
 					</div>
 				) : (
-					userTrips.map(({ backgroundImage, from, title, to, _id }) => {
+					userTrips
+						.filter(filterTripsByDate(value))
+						.map(({ backgroundImage, from, title, to, _id }) => {
 						/* Sets a flag on the original moment to use UTC to display a moment instead of the original moment's time. */
 						const utcStart = new moment(from).utc();
 						const utcEnd = new moment(to).utc();
