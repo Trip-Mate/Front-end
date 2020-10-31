@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import axios from 'axios';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -13,6 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 
 /* Icons */
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -21,6 +22,18 @@ import DirectionsIcon from '@material-ui/icons/Directions';
 import ExploreIcon from '@material-ui/icons/Explore';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+/* Dialog */
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
+/* Confirm Trip Delete Success Message */
+import { Alert, AlertTitle  } from '@material-ui/lab';
 
 /* Contexts */
 import SingleTripContext from '../../../contexts/single-trip/single-trip.context';
@@ -32,9 +45,39 @@ const useStyles = makeStyles((theme) => ({
 	  height: 'auto',
 	  backgroundColor: theme.palette.background.paper,
 	},
+	subHeader: {
+	  textTransform: "uppercase",
+	  fontSize: "20px",
+	  fontStyle: "oblique",
+	  fontWeight: "bold",
+	},
+	button: {
+	  display: "flex",
+	  justifyContent: "flex-end"
+	},
+	dialog: {
+	  color: "red",
+	  fontWeight: "bold"
+	},
+	alert: {
+	  position: "absolute",
+	  top: "15%",
+	  left: "5%",
+	}
 }));
 
+/* Slide Dialog to the top */
+const Transition = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />;
+});
+
 const SingleTrip = ({ match }) => {
+
+	/* Handle delete button toggle */
+	const [open, setOpen] = useState(false);
+
+	/* Handle Confirm Delete Message */
+	const [isDeleted, setIsDeleted] = useState(false);
 
 	/* getting single trip context */
 	const { singleTrip, setSingleTrip } = useContext(SingleTripContext);
@@ -42,7 +85,16 @@ const SingleTrip = ({ match }) => {
 	/* getting name from current user context */
 	const { currentUser: { name }} = useContext(CurrentUserContext);
 
+	let history = useHistory();
 	const classes = useStyles();
+
+	/* Toggle Button */
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
+	const handleClose = () => {
+		setOpen(false);
+	};
 
 	/* getting single trip data */
 	useEffect(() => {
@@ -96,6 +148,36 @@ const SingleTrip = ({ match }) => {
 		}
 	};
 
+	const confirmTripDelete = async () => {
+		try {
+			/* getting user token */
+			const user = JSON.parse(localStorage.getItem('user'));
+			const token = user.token;
+
+			/* getting current path */
+			const url = match.url;
+
+			/* getting authorized response */
+			const res = await axios.delete(`${url}`, {
+				headers: {
+					'x-auth-token': token,
+				},
+			});
+
+			if (res.data) {
+				setTimeout(() => {
+					history.push(`/overview`);
+				}, 1400);
+				/* Close dialog */
+				handleClose();
+				/* Display success message */
+				setIsDeleted(true);
+			}
+		} catch (error) {
+			console.log('Error deleting trip', error.message);
+		} 
+	};
+
 	const { title, budget, countries, baseCurrency, from, createdAt} = singleTrip;
   
 	return (
@@ -103,7 +185,12 @@ const SingleTrip = ({ match }) => {
 			component="nav"
 			aria-labelledby="nested-list-subheader"
 			subheader={
-			  <ListSubheader color="primary" component="h2" id="nested-list-subheader">
+			  <ListSubheader 
+			  color="primary" 
+			  component="h2" 
+			  id="nested-list-subheader"
+			  className={classes.subHeader}
+			  >
 				Single Trip View
 			  </ListSubheader>
 			}
@@ -161,7 +248,52 @@ const SingleTrip = ({ match }) => {
 				  </Avatar>
 				</ListItemAvatar>
 				<ListItemText primary="Wallet" secondary={`${baseCurrency} ${budget}`} />
-			  </ListItem>	  
+			  </ListItem>	
+			  <ListItem
+			  className={classes.button}
+			  button={true}
+			  >
+			    <Button
+				variant="outlined" 
+				color="secondary"
+				size="small"
+				startIcon={<DeleteIcon />}
+				onClick={handleClickOpen}
+				>
+					Delete
+				</Button>
+				<Dialog
+				open={open}
+				TransitionComponent={Transition}
+				keepMounted
+				onClose={handleClose}
+				aria-labelledby="alert-dialog-slide-title"
+				aria-describedby="alert-dialog-slide-description"
+				>
+				<DialogTitle id="alert-dialog-title">{"Confirm deletion"}</DialogTitle>
+				<DialogContent severity="warning">
+					<DialogContentText className={classes.dialog} id="alert-dialog-description">
+					Are you sure you want permanently delete this trip ?
+					</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={confirmTripDelete} color="primary">
+					Yes
+					</Button>
+					<Button onClick={handleClose} color="primary" autoFocus>
+					No
+					</Button>
+				</DialogActions>
+				</Dialog>
+				{
+					isDeleted ? (
+						<Alert className={classes.alert} severity="success">
+							<AlertTitle>Success</AlertTitle>
+							<strong>Trip Deleted Successfully!</strong>
+						</Alert>
+					) : ""
+				}
+			  </ListItem> 
 			</List>
 		  );
 }
