@@ -40,14 +40,15 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 // Styles
 const useStyles = makeStyles((theme) => ({
 	paper: {
-		marginTop: theme.spacing(8),
+		marginTop: theme.spacing(4),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
+		paddingBottom: '65px',
 	},
 	alert: {
-		border: "1px solid green",
-		borderRadius: "5px",
+		border: '1px solid green',
+		borderRadius: '5px',
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
@@ -65,13 +66,9 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 		textAlign: 'center',
 	},
-	avater: {
+	avatar: {
 		margin: theme.spacing(1),
 		backgroundColor: theme.palette.secondary.main,
-		display: 'grid',
-		justify: 'center',
-		fontSize: 'large',
-		transform: 'translateX(-50%)',
 	},
 }));
 
@@ -95,11 +92,13 @@ const Register = (props) => {
 	/* get User Context */
 	const { setCurrentUser} = useContext(CurrentUserContext);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const [validationErrors, setValidationErrors] = useState('');
 
 	const onSubmit = async (user) => {
 		try {
 			const res = await axios.post('/users', user);
 			if (res) {
+				setValidationErrors('');
 				setIsSuccess(true);
 				setTimeout(() => {
 					props.history.push(NewTripRoute);
@@ -108,7 +107,9 @@ const Register = (props) => {
 				localStorage.setItem('user', JSON.stringify(res.data));
 			}
 		} catch (error) {
-			console.log(error);
+			error.response.data.errors.map((error) => {
+				setValidationErrors(error.msg);
+			});
 		}
 	};
 
@@ -116,169 +117,181 @@ const Register = (props) => {
 
 	return (
 		<Container maxWidth='xs' component='main'>
-		
 			<div className={classes.paper}>
-
-			<Avatar className={classes.avater}>
-				<AssignmentIndIcon />
-			</Avatar>
-			<Typography component='h1' variant='h5'>Please Register Below</Typography>
-			{/* form  */}
-			<form
-				className={classes.form}
-				noValidate
-				onSubmit={handleSubmit(onSubmit)}
-			>
-			{ isSuccess && 	<Dialog value="sm"
-						open={isSuccess}
-						aria-labelledby="alert-dialog-title"
-						aria-describedby="alert-dialog-description"
-					>	
-					<div value="sm" className={classes.alert}>
-							<CheckCircleIcon style={{ color: green[500] }}  />
-						<DialogTitle id="alert-dialog-title"  
-						style={{ color: green[500] }}>
-						{"Congratulations"}
-						</DialogTitle>
-						<DialogContentText id="alert-dialog-description">
-						It's the start of your journey.
-						</DialogContentText>
-						</div>
-					</Dialog> }
-				{/* Email */}
-				<TextField
-					id='email'
-					label='Email Address'
-					type='email'
-					name='email'
-					variant='outlined'
-					margin='normal'
-					fullWidth
-					inputRef={register({
-						required: 'Required',
-						pattern: {
-							value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-							message: 'Invalid email address',
-						},
-					})}
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<EmailIcon color='secondary' />
-							</InputAdornment>
-						),
-					}}
-					error={!!errors.email}
-				/>
-				{errors.email && <Alert severity="error">{errors.email.message}</Alert>}
-
-				{/*username  */}
-				<TextField
-					fullWidth
-					margin='normal'
-					variant='outlined'
-					label='Username'
-					name='name'
-					inputRef={register({
-						required: 'Required',
-					})}
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<AccountCircleIcon color='secondary' />
-							</InputAdornment>
-						),
-					}}
-					error={!!errors.name}
-				/>
-				{errors.name && <Alert severity="error">{errors.name.message}</Alert>}
-
-				{/* Password */}
-				<TextField
-					fullWidth
-					margin='normal'
-					variant='outlined'
-					type='password'
-					label='Password'
-					name='password'
-					inputRef={register({
-						required: 'Required',
-						pattern: {
-							value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-							message: 'Please include at least 1 character and 1 number',
-						},
-					})}
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<LockIcon color='secondary' />
-							</InputAdornment>
-						),
-					}}
-					error={!!errors.password}
-				/>
-				{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
-
-				{/* Re-enter password */}
-				<TextField
-					fullWidth
-					margin='normal'
-					variant='outlined'
-					type='password'
-					label='Re-enter password'
-					name='reEnterPassword'
-					inputRef={register({
-						validate: value =>
-							  value === password.current || "The passwords do not match"
-						},
-					)}
-					InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<LockIcon color='secondary' />
-							</InputAdornment>
-						),
-					}}
-					error={!!errors.reEnterPassword}
-				/>
-				{errors.reEnterPassword && <Alert severity="error">{errors.reEnterPassword.message}</Alert>}
-				{!isSuccess ? (
-				<Button
-					type='submit'
-					margin='normal'
-					fullWidth
-					variant='contained'
-					color='primary'
-					disabled={
-						!!errors.email ||
-						!!errors.name ||
-						!!errors.password ||
-						!!errors.reEnterPassword
-					}
+				<Avatar className={classes.avatar}>
+				</Avatar>
+				<Typography component='h1' variant='h5'>
+					Please Register Below
+				</Typography>
+				{/* form  */}
+				<form
+					className={classes.form}
+					noValidate
+					onSubmit={handleSubmit(onSubmit)}
 				>
-					{' '}
-					Register
-				</Button>
-				) : ( 
+					{isSuccess && (
+						<Dialog
+							value='sm'
+							open={isSuccess}
+							aria-labelledby='alert-dialog-title'
+							aria-describedby='alert-dialog-description'
+						>
+							<div value='sm' className={classes.alert}>
+								<CheckCircleIcon style={{ color: green[500] }} />
+								<DialogTitle
+									id='alert-dialog-title'
+									style={{ color: green[500] }}
+								>
+									{'Congratulations'}
+								</DialogTitle>
+								<DialogContentText id='alert-dialog-description'>
+									It's the start of your journey.
+								</DialogContentText>
+							</div>
+						</Dialog>
+					)}
+					{/* Email */}
+					<TextField
+						id='email'
+						label='Email Address'
+						type='email'
+						name='email'
+						variant='outlined'
+						margin='normal'
+						fullWidth
+						inputRef={register({
+							required: 'Required',
+							pattern: {
+								value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+								message: 'Invalid email address',
+							},
+						})}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<EmailIcon color='secondary' />
+								</InputAdornment>
+							),
+						}}
+						error={!!errors.email}
+					/>
+					{errors.email && (
+						<Alert severity='error'>{errors.email.message}</Alert>
+					)}
+
+					{/*username  */}
+					<TextField
+						fullWidth
+						margin='normal'
+						variant='outlined'
+						label='Username'
+						name='name'
+						inputRef={register({
+							required: 'Required',
+						})}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<AccountCircleIcon color='secondary' />
+								</InputAdornment>
+							),
+						}}
+						error={!!errors.name}
+					/>
+					{errors.name && <Alert severity='error'>{errors.name.message}</Alert>}
+
+					{/* Password */}
+					<TextField
+						fullWidth
+						margin='normal'
+						variant='outlined'
+						type='password'
+						label='Password'
+						name='password'
+						inputRef={register({
+							required: 'Required',
+							pattern: {
+								value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+								message: 'Please include at least 1 character and 1 number',
+							},
+						})}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<LockIcon color='secondary' />
+								</InputAdornment>
+							),
+						}}
+						error={!!errors.password}
+					/>
+					{errors.password && (
+						<Alert severity='error'>{errors.password.message}</Alert>
+					)}
+
+					{/* Re-enter password */}
+					<TextField
+						fullWidth
+						margin='normal'
+						variant='outlined'
+						type='password'
+						label='Re-enter password'
+						name='reEnterPassword'
+						inputRef={register({
+							validate: (value) =>
+								value === password.current || 'The passwords do not match',
+						})}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position='start'>
+									<LockIcon color='secondary' />
+								</InputAdornment>
+							),
+						}}
+						error={!!errors.reEnterPassword}
+					/>
+					{errors.reEnterPassword && (
+						<Alert severity='error'>{errors.reEnterPassword.message}</Alert>
+					)}
+					{!isSuccess ? (
+						<Button
+							type='submit'
+							margin='normal'
+							fullWidth
+							variant='contained'
+							color='primary'
+							disabled={
+								!!errors.email ||
+								!!errors.name ||
+								!!errors.password ||
+								!!errors.reEnterPassword
+							}
+						>
+							{' '}
+							Register
+						</Button>
+					) : (
 						isSuccess
 					)}
-				<Grid container margin='20px' >
-					{/* Password Recovery */}
-					<Grid item xs  margin='normal' >
-						<Link href={ForgotRoute} margin='normal' variant='body2'>
-							Forgot password?
-						</Link>
-					</Grid>
+					{validationErrors && (
+						<Alert severity='error'>{validationErrors}</Alert>
+					)}
+					<Grid container margin='20px'>
+						{/* Password Recovery */}
+						<Grid item xs margin='normal'>
+							<Link href={ForgotRoute} margin='normal' variant='body2'>
+								Forgot password?
+							</Link>
+						</Grid>
 
-					{/* Redirect to Register */}
-					<Grid item >
-						<Link href={LoginRoute}  variant='body2'>
-							{'Already a member? Sign In'}
-						</Link>
+						{/* Redirect to Register */}
+						<Grid item>
+							<Link href={LoginRoute} variant='body2'>
+								{'Already a member? Sign In'}
+							</Link>
+						</Grid>
 					</Grid>
-				</Grid>
-			</form>
-		  </div>
+				</form>
+			</div>
 		</Container>
 	);
 };
