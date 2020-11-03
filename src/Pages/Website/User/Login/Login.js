@@ -24,7 +24,6 @@ import {
 } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
 
-
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
 
@@ -38,14 +37,12 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
 
 /* Styles */
-
 const useStyles = makeStyles((theme) => ({
 	paper: {
 		marginTop: theme.spacing(8),
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
-
 	},
 	avatar: {
 		margin: theme.spacing(1),
@@ -82,12 +79,14 @@ function LogIn(props) {
 	/* get User Context */
 	const { setCurrentUser } = useContext(CurrentUserContext);
 	const [isSuccess, setIsSuccess] = useState(false);
+	const [validationErrors, setValidationErrors] = useState('')
 	const classes = useStyles();
 
 	const onSubmit = async (user) => {
 		try {
 			const res = await axios.post('/auth', user);
 			if (res) {
+				setValidationErrors('')
 				setIsSuccess(true);
 				setTimeout(() => {
 					props.history.push(OverviewRoute);
@@ -96,44 +95,36 @@ function LogIn(props) {
 				localStorage.setItem('user', JSON.stringify(res.data));
 			}
 		} catch (error) {
-			console.log(error)
+			error.response.data.errors.map((error) => {
+			 setValidationErrors(error.msg);
+			})
 		}
 	};
 
-
-
-
-
 	return (
 		<Container component='main' maxWidth='xs'>
-
 			<div className={classes.paper}>
-			
-		
-
-		 {isSuccess && 
-				<Dialog value="sm"
-
+				{isSuccess && (
+					<Dialog
+						value='sm'
 						open={isSuccess}
-						aria-labelledby="alert-dialog-title"
-						aria-describedby="alert-dialog-description"
-					>	
-					<div className={classes.alert}>
-							<CheckCircleIcon style={{ color: green[500] }}  />
-						<DialogTitle id="alert-dialog-title"  
-						style={{ color: green[500] }}>
-						{"Successful login!"}
-						</DialogTitle>
-						<DialogContentText id="alert-dialog-description">
-						Start your journey.
-						</DialogContentText>
+						aria-labelledby='alert-dialog-title'
+						aria-describedby='alert-dialog-description'
+					>
+						<div className={classes.alert}>
+							<CheckCircleIcon style={{ color: green[500] }} />
+							<DialogTitle
+								id='alert-dialog-title'
+								style={{ color: green[500] }}
+							>
+								{'Successful login!'}
+							</DialogTitle>
+							<DialogContentText id='alert-dialog-description'>
+								Start your journey.
+							</DialogContentText>
 						</div>
-					</Dialog>	
-					}
-	
-				
-					
-			
+					</Dialog>
+				)}
 				{/* Icon */}
 				<Avatar className={classes.avatar}>
 					<LockOutlinedIcon />
@@ -142,7 +133,6 @@ function LogIn(props) {
 				<Typography component='h1' variant='h5'>
 					Sign in
 				</Typography>
-
 				<form
 					className={classes.form}
 					noValidate
@@ -166,16 +156,16 @@ function LogIn(props) {
 						name='email'
 						error={!!errors.email}
 						InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<EmailIcon color='secondary' />
-							</InputAdornment>
-						),
-					}}
-
+							startAdornment: (
+								<InputAdornment position='start'>
+									<EmailIcon color='secondary' />
+								</InputAdornment>
+							),
+						}}
 					/>
-					{errors.email && <Alert severity="error">{errors.email.message}</Alert>}
-
+					{errors.email && (
+						<Alert severity='error'>{errors.email.message}</Alert>
+					)}
 					{/* Password */}
 					<TextField
 						variant='outlined'
@@ -188,11 +178,11 @@ function LogIn(props) {
 							},
 						})}
 						InputProps={{
-						startAdornment: (
-							<InputAdornment position='start'>
-								<AccountCircleIcon color='secondary' />
-							</InputAdornment>
-						),
+							startAdornment: (
+								<InputAdornment position='start'>
+									<AccountCircleIcon color='secondary' />
+								</InputAdornment>
+							),
 						}}
 						fullWidth
 						name='password'
@@ -201,29 +191,29 @@ function LogIn(props) {
 						id='password'
 						error={!!errors.password}
 					/>
-					{errors.password && <Alert severity="error">{errors.password.message}</Alert>}
-				
+					{errors.password && (
+						<Alert severity='error'>{errors.password.message}</Alert>
+					)}
 					{/* Remember me */}
-
 					{/* <FormControlLabel
 							control={
 							<Controller as={Checkbox} control={control} name="remember" color="primary" defaultValue={false}/>}
 							label="Remember me"
 						/> */}
 					{!isSuccess ? (
-					<Button
-						type='submit'
-						fullWidth
-						variant='contained'
-						color='primary'
-						className={classes.submit}
-						disabled={!!errors.email || !!errors.password}
-					>
-						Sign In
-					</Button>
-					) : ( 
-						null
-					)}
+						<Button
+							type='submit'
+							fullWidth
+							variant='contained'
+							color='primary'
+							className={classes.submit}
+							disabled={!!errors.email || !!errors.password}
+						>
+							Sign In
+						</Button>
+					) : null}
+					{validationErrors && (
+					<Alert severity='error'>{validationErrors}</Alert>)}
 					<Grid container>
 						{/* Password Recovery */}
 						<Grid item xs>
@@ -231,7 +221,6 @@ function LogIn(props) {
 								Forgot password?
 							</Link>
 						</Grid>
-
 						{/* Redirect to Register */}
 						<Grid item>
 							<Link href={RegisterRoute} variant='body2'>
