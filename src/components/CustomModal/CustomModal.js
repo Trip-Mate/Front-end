@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import {
 	Button,
 	Modal,
-  	Backdrop,
+  Backdrop,
 	IconButton,
 	makeStyles,
 	Typography

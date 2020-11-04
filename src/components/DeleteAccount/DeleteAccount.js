@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import {HomeRoute} from '../../Routing';
 import CurrentUserContext from '../../contexts/current-user/current-user.context';
@@ -57,8 +57,9 @@ const useStyles = makeStyles((theme) => ({
 
 const DeleteAccount = (props) => {
 	const classes = useStyles();
-  	const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-  	const [isSuccess, setIsSuccess] = React.useState(false)
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+	const [isSuccess, setIsSuccess] = React.useState(false)
+	const [validationErrors, setValidationErrors] = useState('');
 
   	const { register, errors, handleSubmit } = useForm({
 		mode: 'onSubmit',
@@ -72,7 +73,7 @@ const DeleteAccount = (props) => {
 			try {
 				/* getting user token */
 				const user = JSON.parse(localStorage.getItem('user'));
-        		const token = user.token;
+        const token = user.token;
 				const password = data.password;
 				const options = {
 					headers: { 'x-auth-token': token },
@@ -94,7 +95,9 @@ const DeleteAccount = (props) => {
 					window.localStorage.clear();
 				}
 			} catch (error) {
-				console.log(error);
+				error.response.data.errors.map((error) => {
+					setValidationErrors(error.msg);
+				});
 			}
 		};
 
@@ -143,9 +146,12 @@ const DeleteAccount = (props) => {
 					>
 						Delete My Account
 					</Button>
+					{validationErrors && (
+						<Alert severity='error'>{validationErrors}</Alert>
+					)}
 				</form>
 			</>
-	);
+		);
 
 	const description = (
 		<>
