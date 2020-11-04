@@ -12,11 +12,14 @@ import {
 	makeStyles,
 	Button,
 	TextField,
-	InputAdornment
+	InputAdornment,
+	IconButton,
 } from '@material-ui/core';
 
 /* Material UI icons*/
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 /* Error Messages */
 import Alert from '@material-ui/lab/Alert';
@@ -34,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 		padding: theme.spacing(2, 4, 3),
 	},
 	error: {
-    padding: theme.spacing(0, 2),
+		padding: theme.spacing(0, 2),
 	},
 	cancelWrapper: {
 		position: 'absolute',
@@ -53,6 +56,11 @@ const useStyles = makeStyles((theme) => ({
 		width: '100%',
 		marginTop: '8px',
 	},
+	visibilityIcon: {
+		position: 'absolute',
+		right: '10px',
+		color: 'rgba(0, 0, 0, 0.3)',
+	},
 }));
 
 const DeleteAccount = (props) => {
@@ -60,6 +68,7 @@ const DeleteAccount = (props) => {
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 	const [isSuccess, setIsSuccess] = React.useState(false)
 	const [validationErrors, setValidationErrors] = useState('');
+	const [passwordVisible, setPasswordVisible] = useState(false);
 
   	const { register, errors, handleSubmit } = useForm({
 		mode: 'onSubmit',
@@ -89,6 +98,7 @@ const DeleteAccount = (props) => {
 				if (res.status === 200) {
 					// console.log(res)
 					setIsSuccess(true);
+					setPasswordVisible(false);
 					console.log('success')
 					props.history.push(HomeRoute);
 					setCurrentUser(null);
@@ -123,13 +133,24 @@ const DeleteAccount = (props) => {
 							startAdornment: (
 								<InputAdornment position='start'>
 									<VpnKeyIcon color='secondary' />
+									<IconButton className={classes.visibilityIcon}>
+										{!passwordVisible ? (
+											<VisibilityIcon
+												onClick={() => setPasswordVisible(true)}
+											/>
+										) : (
+											<VisibilityOffIcon
+												onClick={() => setPasswordVisible(false)}
+											/>
+										)}
+									</IconButton>
 								</InputAdornment>
 							),
 						}}
 						fullWidth
 						name='password'
 						label='Password'
-						type='password'
+						type={passwordVisible ? 'text' : 'password'}
 						id='password'
 						error={!!errors.password}
 					/>

@@ -21,6 +21,7 @@ import {
 	DialogTitle,
 	Dialog,
 	DialogContentText,
+	IconButton,
 } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
 
@@ -32,6 +33,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import EmailIcon from '@material-ui/icons/Email';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 /* User Context */
 import CurrentUserContext from '../../../../contexts/current-user/current-user.context';
@@ -56,13 +59,18 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(3, 0, 2),
 	},
 	alert: {
-		border: "1px solid green",
-		borderRadius: "5px",
+		border: '1px solid green',
+		borderRadius: '5px',
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
 		padding: '20px',
-	}
+	},
+	visibilityIcon: {
+		position: 'absolute',
+		right: '10px',
+		color: 'rgba(0, 0, 0, 0.3)',
+	},
 }));
 
 function LogIn(props) {
@@ -79,7 +87,8 @@ function LogIn(props) {
 	/* get User Context */
 	const { setCurrentUser } = useContext(CurrentUserContext);
 	const [isSuccess, setIsSuccess] = useState(false);
-	const [validationErrors, setValidationErrors] = useState('')
+	const [validationErrors, setValidationErrors] = useState('');
+	const [passwordVisible, setPasswordVisible] = useState(false);
 	const classes = useStyles();
 
 	const onSubmit = async (user) => {
@@ -88,6 +97,7 @@ function LogIn(props) {
 			if (res) {
 				setValidationErrors('')
 				setIsSuccess(true);
+				setPasswordVisible(false)
 				setTimeout(() => {
 					props.history.push(OverviewRoute);
 				}, 2000);
@@ -181,13 +191,24 @@ function LogIn(props) {
 							startAdornment: (
 								<InputAdornment position='start'>
 									<AccountCircleIcon color='secondary' />
+									<IconButton className={classes.visibilityIcon}>
+										{!passwordVisible ? (
+											<VisibilityIcon
+												onClick={() => setPasswordVisible(true)}
+											/>
+										) : (
+											<VisibilityOffIcon
+												onClick={() => setPasswordVisible(false)}
+											/>
+										)}
+									</IconButton>
 								</InputAdornment>
 							),
 						}}
 						fullWidth
 						name='password'
 						label='Password'
-						type='password'
+						type={passwordVisible ? 'text' : 'password'}
 						id='password'
 						error={!!errors.password}
 					/>
@@ -213,7 +234,8 @@ function LogIn(props) {
 						</Button>
 					) : null}
 					{validationErrors && (
-					<Alert severity='error'>{validationErrors}</Alert>)}
+						<Alert severity='error'>{validationErrors}</Alert>
+					)}
 					<Grid container>
 						{/* Password Recovery */}
 						<Grid item xs>

@@ -1,13 +1,6 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { withRouter } from 'react-router-dom';
 import {
-	HomeRoute,
-	FeaturesRoute,
-	DocsRoute,
-	ContactRoute,
-	LoginRoute,
-	RegisterRoute,
-	ProfileRoute,
 	OverviewRoute,
 } from '../../Routing';
 
@@ -16,7 +9,8 @@ import { BottomNavigation, BottomNavigationAction, Button } from '@material-ui/c
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HomeIcon from '@material-ui/icons/Home';
-import EditIcon from '@material-ui/icons/Edit';
+// User Context 
+import CurrentUserContext from '../../contexts/current-user/current-user.context' 
 
 const useStyles = makeStyles({
 	root: {
@@ -32,12 +26,11 @@ const useStyles = makeStyles({
 	}
 });
 
-
-
 const BottomNavigationTrips = (props) => {
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
-	return (
+	const { currentUser, setCurrentUser } = useContext(CurrentUserContext); 
+	return currentUser ? (
 		<BottomNavigation
 			value={value}
 			onChange={(event, newValue) => {
@@ -68,7 +61,7 @@ const BottomNavigationTrips = (props) => {
         className={classes.button}
 			/> */}
 		</BottomNavigation>
-	);
+	) : null
 };
 
 export default withRouter(BottomNavigationTrips);

@@ -24,6 +24,7 @@ import {
 	DialogTitle,
 	Dialog,
 	DialogContentText,
+	IconButton,
 } from '@material-ui/core';
 import { green } from '@material-ui/core/colors';
 
@@ -34,8 +35,9 @@ import Alert from '@material-ui/lab/Alert';
 import LockIcon from '@material-ui/icons/Lock';
 import EmailIcon from '@material-ui/icons/Email';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 // Styles
 const useStyles = makeStyles((theme) => ({
@@ -70,6 +72,11 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(1),
 		backgroundColor: theme.palette.secondary.main,
 	},
+	visibilityIcon: {
+		position: 'absolute',
+		right: '10px',
+		color: 'rgba(0, 0, 0, 0.3)',
+	},
 }));
 
 const Register = (props) => {
@@ -93,6 +100,8 @@ const Register = (props) => {
 	const { setCurrentUser} = useContext(CurrentUserContext);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [validationErrors, setValidationErrors] = useState('');
+	const [password1Visible, setPassword1Visible] = useState(false);
+	const [password2Visible, setPassword2Visible] = useState(false);
 
 	const onSubmit = async (user) => {
 		try {
@@ -100,6 +109,8 @@ const Register = (props) => {
 			if (res) {
 				setValidationErrors('');
 				setIsSuccess(true);
+				setPassword1Visible(false);
+				setPassword2Visible(false)
 				setTimeout(() => {
 					props.history.push(NewTripRoute);
 				}, 2000);
@@ -118,8 +129,7 @@ const Register = (props) => {
 	return (
 		<Container maxWidth='xs' component='main'>
 			<div className={classes.paper}>
-				<Avatar className={classes.avatar}>
-				</Avatar>
+				<Avatar className={classes.avatar}></Avatar>
 				<Typography component='h1' variant='h5'>
 					Please Register Below
 				</Typography>
@@ -205,7 +215,7 @@ const Register = (props) => {
 						fullWidth
 						margin='normal'
 						variant='outlined'
-						type='password'
+						type={password1Visible ? 'text' : 'password'}
 						label='Password'
 						name='password'
 						inputRef={register({
@@ -219,6 +229,17 @@ const Register = (props) => {
 							startAdornment: (
 								<InputAdornment position='start'>
 									<LockIcon color='secondary' />
+									<IconButton className={classes.visibilityIcon}>
+										{!password1Visible ? (
+											<VisibilityIcon
+												onClick={() => setPassword1Visible(true)}
+											/>
+										) : (
+											<VisibilityOffIcon
+												onClick={() => setPassword1Visible(false)}
+											/>
+										)}
+									</IconButton>
 								</InputAdornment>
 							),
 						}}
@@ -233,7 +254,7 @@ const Register = (props) => {
 						fullWidth
 						margin='normal'
 						variant='outlined'
-						type='password'
+						type={password2Visible ? 'text' : 'password'}
 						label='Re-enter password'
 						name='reEnterPassword'
 						inputRef={register({
@@ -244,6 +265,17 @@ const Register = (props) => {
 							startAdornment: (
 								<InputAdornment position='start'>
 									<LockIcon color='secondary' />
+									<IconButton className={classes.visibilityIcon}>
+										{!password2Visible ? (
+											<VisibilityIcon
+												onClick={() => setPassword2Visible(true)}
+											/>
+										) : (
+											<VisibilityOffIcon
+												onClick={() => setPassword2Visible(false)}
+											/>
+										)}
+									</IconButton>
 								</InputAdornment>
 							),
 						}}
