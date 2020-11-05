@@ -1,6 +1,5 @@
-import React,{useState, useEffect} from 'react';
-import axios from 'axios';
-import { Box } from '@material-ui/core';
+import React from 'react';
+// import axios from 'axios';
 import currencies from '../../../currencies'
 import currentUserContext from '../../../contexts/current-user/current-user.context';
 
@@ -10,17 +9,17 @@ import { useForm } from 'react-hook-form';
 
 /* Material UI core*/
 import {
-	Avatar,
-	Button,
+	// Avatar,
+	// Button,
 	TextField,
 	makeStyles,
 	Container,
-	Typography,
-	Badge,
-	Paper,
+	// Typography,
+	// Badge,
+	// Paper,
 } from '@material-ui/core';
 /* Error Messages */
-import Alert from '@material-ui/lab/Alert';
+// import Alert from '@material-ui/lab/Alert';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,18 +42,18 @@ const useStyles = makeStyles((theme) => ({
 	},
 
 }))
-const Rates = 'objectId("5f73b5a403d9fe75c3cce753")'
+// const Rates = 'objectId("5f73b5a403d9fe75c3cce753")'
 // <Box>Features</Box>;
 function Features() {
 	
-	const [isSuccess, setIsSuccess] = useState(false);
-	const [baseCurrency, setBaseCurrency] = React.useState(
+	// const [isSuccess, setIsSuccess] = useState(false);
+	const [baseCurrency, /*setBaseCurrency*/] = React.useState(
 		currentUserContext.baseCurrency || 'EUR'
 	);
 
 	const classes = useStyles();
 
-	const { register, errors, handleSubmit, control, watch } = useForm({
+	const { register/*, errors, handleSubmit, control, watch*/ } = useForm({
 		mode: 'onSubmit',
 		reValidateMode: 'all',
 		defaultValues: {

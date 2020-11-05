@@ -1,4 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
+import Spinner from '../../../components/Spinner/Spinner';
+
 
 import axios from 'axios';
 
@@ -37,19 +39,21 @@ import { Alert, AlertTitle  } from '@material-ui/lab';
 
 /* Contexts */
 import SingleTripContext from '../../../contexts/single-trip/single-trip.context';
-import CurrentUserContext from '../../../contexts/current-user/current-user.context';
+// import CurrentUserContext from '../../../contexts/current-user/current-user.context';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 	  width: '100vw',
 	  height: 'auto',
-	  backgroundColor: theme.palette.background.paper,
+		backgroundColor: theme.palette.background.paper,
+		paddingBottom: '50px',
 	},
 	subHeader: {
 	  textTransform: "uppercase",
 	  fontSize: "20px",
 	  fontStyle: "oblique",
-	  fontWeight: "bold",
+		fontWeight: "bold",
+		margin: '5px',
 	},
 	button: {
 	  display: "flex",
@@ -83,7 +87,9 @@ const SingleTrip = ({ match }) => {
 	const { singleTrip, setSingleTrip } = useContext(SingleTripContext);
 
 	/* getting name from current user context */
-	const { currentUser: { name }} = useContext(CurrentUserContext);
+	// const { currentUser: { name }} = useContext(CurrentUserContext);
+	const user = JSON.parse(localStorage.getItem('user'));
+	const name = user.user.name;
 
 	let history = useHistory();
 	const classes = useStyles();
@@ -100,13 +106,10 @@ const SingleTrip = ({ match }) => {
 	useEffect(() => {
 		(async () => {
 			try {
-
-				/* getting user token */
-				const user = JSON.parse(localStorage.getItem('user'));
+				// /* getting user token */
 				const token = user.token;
 
-				/* getting current path */
-				const url = match.url;
+				/* getting current path */ const url = match.url;
 
 				/* getting authorized response */
 				const res = await axios.get(`${url}`, {
@@ -120,17 +123,16 @@ const SingleTrip = ({ match }) => {
 
 				/* passing current trip data */
 				setSingleTrip(trip);
-
 			} catch (error) {
 				console.log('Error getting trip Data', error.message);
 			}
 		})();
-	}, []);
+	}, [setSingleTrip, match.url, user.token]);
 
 	const onDataSubmit = async () => {
 		try {
 			/* getting user token */
-			const user = JSON.parse(localStorage.getItem('user'));
+			// const user = JSON.parse(localStorage.getItem('user'));
 			const token = user.token;
 
 			const data = match.params;
@@ -141,7 +143,7 @@ const SingleTrip = ({ match }) => {
 				}
 			}
 
-			const res = await axios.post(`${match.url}/trip-plan`, data, options);
+			/*const res = */await axios.post(`${match.url}/trip-plan`, data, options);
 			
 		} catch (error) {
 			console.log('Error sending data', error.message);
@@ -178,124 +180,132 @@ const SingleTrip = ({ match }) => {
 		} 
 	};
 
-	const { title, budget, countries, baseCurrency, from, createdAt} = singleTrip;
-  
-	return (
-			<List 
-			component="nav"
-			aria-labelledby="nested-list-subheader"
+	const { title, budget, countries, baseCurrency, from, createdAt } = singleTrip;
+	
+	return singleTrip.title ? (
+		<List
+			component='nav'
+			aria-labelledby='nested-list-subheader'
 			subheader={
-			  <ListSubheader 
-			  color="primary" 
-			  component="h2" 
-			  id="nested-list-subheader"
-			  className={classes.subHeader}
-			  >
-				Single Trip View
-			  </ListSubheader>
+				<ListSubheader
+					color='primary'
+					component='h2'
+					id='nested-list-subheader'
+					className={classes.subHeader}
+				>
+					Single Trip View
+				</ListSubheader>
 			}
 			className={classes.root}
+		>
+			<ListItem>
+				<ListItemAvatar>
+					<Avatar>
+						<AccountCircleIcon />
+					</Avatar>
+				</ListItemAvatar>
+				<ListItemText primary='Travellers' secondary={name} />
+			</ListItem>
+			<ListItem>
+				<ListItemAvatar>
+					<Avatar>
+						<EventNoteIcon />
+					</Avatar>
+				</ListItemAvatar>
+				<ListItemText
+					primary='Quick Notes'
+					secondary={createdAt?.substring(0, 10)}
+				/>
+			</ListItem>
+			<ListItem
+				button
+				component={Link}
+				to={`${match.url}/trip-plan`}
+				onClick={onDataSubmit}
 			>
-			  <ListItem>
-				<ListItemAvatar>
-				  <Avatar>
-					<AccountCircleIcon />
-				  </Avatar>
-				</ListItemAvatar>
-				<ListItemText primary="Travellers" secondary={name} />
-			  </ListItem>
-			  <ListItem>
-				<ListItemAvatar>
-				  <Avatar>
-					<EventNoteIcon />
-				  </Avatar>
-				</ListItemAvatar>
-				<ListItemText primary="Quick Notes" secondary={createdAt} />
-			  </ListItem>
-			  <ListItem 
-			  button 
-			  component={Link} 
-			  to={`${match.url}/trip-plan`}
-			  onClick={onDataSubmit}
-			  >
 				<ListItemAvatar>
 					<Avatar>
 						<DirectionsIcon />
 					</Avatar>
 				</ListItemAvatar>
-				<ListItemText primary="Trip Plan" secondary={title} />
-			  </ListItem>
-			  <ListItem>
+				<ListItemText primary='Trip Plan' secondary={title} />
+			</ListItem>
+			<ListItem>
 				<ListItemAvatar>
-				  <Avatar>
-					<ExploreIcon />
-				  </Avatar>
+					<Avatar>
+						<ExploreIcon />
+					</Avatar>
 				</ListItemAvatar>
-				<ListItemText primary="Map" secondary={countries} />
-			  </ListItem>
-			  <ListItem>
+				<ListItemText primary='Map' secondary={countries} />
+			</ListItem>
+			<ListItem>
 				<ListItemAvatar>
-				  <Avatar>
-					<LocalMallIcon />
-				  </Avatar>
+					<Avatar>
+						<LocalMallIcon />
+					</Avatar>
 				</ListItemAvatar>
-				<ListItemText primary="Briefing" secondary={from} />
-			  </ListItem>
-			  <ListItem>
+				<ListItemText primary='Briefing' secondary={from?.substring(0, 10)} />
+			</ListItem>
+			<ListItem>
 				<ListItemAvatar>
-				  <Avatar>
-					<LockOpenIcon />
-				  </Avatar>
+					<Avatar>
+						<LockOpenIcon />
+					</Avatar>
 				</ListItemAvatar>
-				<ListItemText primary="Wallet" secondary={`${baseCurrency} ${budget}`} />
-			  </ListItem>	
-			  <ListItem
-			  className={classes.button}
-			  button={true}
-			  >
-			    <Button
-				variant="outlined" 
-				color="secondary"
-				size="small"
-				startIcon={<DeleteIcon />}
-				onClick={handleClickOpen}
+				<ListItemText
+					primary='Wallet'
+					secondary={baseCurrency && budget ? `${baseCurrency} ${budget}` : null}
+				/>
+			</ListItem>
+			<ListItem className={classes.button} button={true}>
+				<Button
+					variant='outlined'
+					color='secondary'
+					size='small'
+					startIcon={<DeleteIcon />}
+					onClick={handleClickOpen}
 				>
 					Delete
 				</Button>
 				<Dialog
-				open={open}
-				TransitionComponent={Transition}
-				keepMounted
-				onClose={handleClose}
-				aria-labelledby="alert-dialog-slide-title"
-				aria-describedby="alert-dialog-slide-description"
+					open={open}
+					TransitionComponent={Transition}
+					keepMounted
+					onClose={handleClose}
+					aria-labelledby='alert-dialog-slide-title'
+					aria-describedby='alert-dialog-slide-description'
 				>
-				<DialogTitle id="alert-dialog-title">{"Confirm deletion"}</DialogTitle>
-				<DialogContent severity="warning">
-					<DialogContentText className={classes.dialog} id="alert-dialog-description">
-					Are you sure you want permanently delete this trip ?
-					</DialogContentText>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={confirmTripDelete} color="primary">
-					Yes
-					</Button>
-					<Button onClick={handleClose} color="primary" autoFocus>
-					No
-					</Button>
-				</DialogActions>
+					<DialogTitle id='alert-dialog-title'>
+						{'Confirm deletion'}
+					</DialogTitle>
+					<DialogContent severity='warning'>
+						<DialogContentText
+							className={classes.dialog}
+							id='alert-dialog-description'
+						>
+							Are you sure you want permanently delete this trip ?
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={confirmTripDelete} color='primary'>
+							Yes
+						</Button>
+						<Button onClick={handleClose} color='primary' autoFocus>
+							No
+						</Button>
+					</DialogActions>
 				</Dialog>
-				{
-					isDeleted ? (
-						<Alert className={classes.alert} severity="success">
-							<AlertTitle>Success</AlertTitle>
-							<strong>Trip Deleted Successfully!</strong>
-						</Alert>
-					) : ""
-				}
-			  </ListItem> 
-			</List>
-		  );
+				{isDeleted ? (
+					<Alert className={classes.alert} severity='success'>
+						<AlertTitle>Success</AlertTitle>
+						<strong>Trip Deleted Successfully!</strong>
+					</Alert>
+				) : (
+					''
+				)}
+			</ListItem>
+		</List>
+	) : <Spinner />
 }
 
 

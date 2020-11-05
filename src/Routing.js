@@ -1,6 +1,6 @@
 import React, { useState, lazy } from 'react';
 
-import { Route, withRouter, Switch } from 'react-router-dom';
+import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 
 import SingleTripContext from './contexts/single-trip/single-trip.context'
 
@@ -33,7 +33,6 @@ export const LoginRoute = '/login';
 export const ForgotRoute = '/forgot';
 export const ResetRoute = '/reset/:resetPasswordToken';
 
-
 // App variables
 export const ProfileRoute = '/user/profile'
 export const OverviewRoute = '/overview';
@@ -43,7 +42,7 @@ export const MyTripsRoute = '/trips/my-trips';
 // Router
 function Routing() {
 	
-	const [ singleTrip, setSingleTrip ] = useState({});
+	const [singleTrip, setSingleTrip] = useState({});
 
 	return (
 		<Switch>
@@ -55,18 +54,24 @@ function Routing() {
 			<Route path={LoginRoute} exact component={Login} />
 			<Route path={ForgotRoute} exact component={Forgot} />
 			<Route path={ResetRoute} exact component={Reset} />
-			<Route path={OverviewRoute} exact component={Overview} />
-			<Route path={MyTripsRoute} exact component={MyTrips} />
-			<Route path={NewTripRoute} exact component={NewTrip} />
-			<Route path={ProfileRoute} exact component={Profile} />
-			<SingleTripContext.Provider
-				value={{
-					singleTrip,
-					setSingleTrip,
-				}}
-			>
-				<TripRouting />
-			</SingleTripContext.Provider>
+			{localStorage.getItem('user') ? (
+				<Switch>
+					<Route path={OverviewRoute} exact component={Overview} />
+					<Route path={MyTripsRoute} exact component={MyTrips} />
+					<Route path={NewTripRoute} exact component={NewTrip} />
+					<Route path={ProfileRoute} exact component={Profile} />
+					<SingleTripContext.Provider
+						value={{
+							singleTrip,
+							setSingleTrip,
+						}}
+					>
+						<TripRouting />
+					</SingleTripContext.Provider>
+				</Switch>
+			) : (
+				<Redirect to={LoginRoute} />
+			)}
 		</Switch>
 	);
 }

@@ -19,17 +19,12 @@ const useStyles = makeStyles({
     bottom: 0,
     marginTop: '60px',
 	},
-	button: {
-		'&$selected': {
-			fontSize: '10px',
-		}
-	}
 });
 
 const BottomNavigationTrips = (props) => {
 	const classes = useStyles();
 	const [value, setValue] = React.useState(0);
-	const { currentUser, setCurrentUser } = useContext(CurrentUserContext); 
+	const { currentUser, /*setCurrentUser*/ } = useContext(CurrentUserContext); 
 	return currentUser ? (
 		<BottomNavigation
 			value={value}

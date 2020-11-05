@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
 
 const DeleteAccount = (props) => {
 	const classes = useStyles();
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-	const [isSuccess, setIsSuccess] = React.useState(false)
+  const { /*currentUser, */setCurrentUser } = useContext(CurrentUserContext);
+	const [/*isSuccess, */setIsSuccess] = React.useState(false)
 	const [validationErrors, setValidationErrors] = useState('');
 	const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -106,7 +106,7 @@ const DeleteAccount = (props) => {
 				}
 			} catch (error) {
 				error.response.data.errors.map((error) => {
-					setValidationErrors(error.msg);
+					return setValidationErrors(error.msg);
 				});
 			}
 		};

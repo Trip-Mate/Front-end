@@ -106,7 +106,7 @@ function LogIn(props) {
 			}
 		} catch (error) {
 			error.response.data.errors.map((error) => {
-			 setValidationErrors(error.msg);
+			 return setValidationErrors(error.msg);
 			})
 		}
 	};

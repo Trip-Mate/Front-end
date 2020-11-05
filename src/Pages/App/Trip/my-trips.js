@@ -35,6 +35,8 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 import { NewTripRoute } from '../../../Routing';
 
 /* Styling Components */
+import Spinner from '../../../components/Spinner/Spinner';
+
 const useStyles = makeStyles((theme) => ({
 
 	root: {
@@ -124,7 +126,9 @@ function TabPanel(props) {
 const MyTrips = () => {
 
 	/* getting user trips context */
-	const [ userTrips, setUserTrips ] = useState([]);
+	const [userTrips, setUserTrips] = useState([]);
+	// Loading handler
+	const [isLoaded, setIsLoaded] = useState(false)
 
 	/* Handle Tab View */
 	const [ value, setValue] = useState(0);
@@ -158,6 +162,7 @@ const MyTrips = () => {
 
 				/* passing user trips data to user trips context*/
 				setUserTrips(trips);
+				setIsLoaded(true)
 
 			} catch (error) {
 				console.log('Error', error.message);
@@ -174,74 +179,77 @@ const MyTrips = () => {
 
 	return (
 		<div className={classes.root}>
-			<AppBar position="sticky" color="inherit">
+			<AppBar position='sticky' color='inherit'>
 				<Tabs
-				variant="fullWidth"
-				value={value}
-				onChange={handleChange}
-				aria-label="nav tabs example"
-				textColor="secondary"
+					variant='fullWidth'
+					value={value}
+					onChange={handleChange}
+					aria-label='nav tabs example'
+					textColor='secondary'
 				>
-				<LinkTab label="Upcoming Trips" {...a11yProps(0)} />
-				<LinkTab label="Past Trips" {...a11yProps(1)} />
+					<LinkTab label='Upcoming Trips' {...a11yProps(0)} />
+					<LinkTab label='Past Trips' {...a11yProps(1)} />
 				</Tabs>
 			</AppBar>
 
 			<GridList cellHeight={180} className={classes.gridList}>
-
 				{/* Trips Collection */}
 
-				{
-				!userTrips.length ? (
-					<div style={{ width: '100%', position: 'absolute', top: '20vh' }}>
-						<Alert severity='info'>
-							{/* Link to redirect the user to Create New Trip Page  */}
-							<AlertTitle>It seems like you have no trips yet</AlertTitle>
-							Click{' '}
-							<Link href={NewTripRoute} style={{ fontWeight: 'bold' }}>
-								here
-							</Link>{' '}
-							and start your journey
-						</Alert>
-					</div>
+				{isLoaded ? (
+					!userTrips.length ? (
+						<div style={{ width: '100%', position: 'absolute', top: '20vh' }}>
+							<Alert severity='info'>
+								{/* Link to redirect the user to Create New Trip Page  */}
+								<AlertTitle>It seems like you have no trips yet</AlertTitle>
+								Click{' '}
+								<Link href={NewTripRoute} style={{ fontWeight: 'bold' }}>
+									here
+								</Link>{' '}
+								and start your journey
+							</Alert>
+						</div>
+					) : (
+						userTrips
+							.filter(filterTripsByDate(value))
+							.map(({ backgroundImage, from, title, to, _id }) => {
+								/* Sets a flag on the original moment to use UTC to display a moment instead of the original moment's time. */
+								const utcStart = new moment(from).utc();
+								const utcEnd = new moment(to).utc();
+
+								/* passing trip id to path when user select a trip */
+								function handleClick() {
+									history.push(`/trips/${_id}`);
+								}
+
+								return (
+									<GridListTile key={_id}>
+										<img src={backgroundImage} alt={title} />
+
+										<GridListTileBar
+											key={_id}
+											title={title}
+											subtitle={
+												<span>
+													{utcStart.format('YYYY-MM')} -{' '}
+													{utcEnd.format('YYYY-MM')}
+												</span>
+											}
+											actionIcon={
+												<IconButton
+													aria-label={`info about ${title}`}
+													className={classes.icon}
+													onClick={handleClick}
+												>
+													<InfoIcon />
+												</IconButton>
+											}
+										/>
+									</GridListTile>
+								);
+							})
+					)
 				) : (
-					userTrips
-						.filter(filterTripsByDate(value))
-						.map(({ backgroundImage, from, title, to, _id }) => {
-						/* Sets a flag on the original moment to use UTC to display a moment instead of the original moment's time. */
-						const utcStart = new moment(from).utc();
-						const utcEnd = new moment(to).utc();
-						
-						/* passing trip id to path when user select a trip */
-						function handleClick () {
-							history.push(`/trips/${_id}`);
-						}
-
-						return (
-							<GridListTile key={_id}>
-								<img src={backgroundImage} alt={title} />
-
-								<GridListTileBar
-									key={_id}
-									title={title}
-									subtitle={
-										<span>
-											{utcStart.format('YYYY-MM')} - {utcEnd.format('YYYY-MM')}
-										</span>
-									}
-									actionIcon={
-										<IconButton
-											aria-label={`info about ${title}`}
-											className={classes.icon}
-											onClick={handleClick}
-										>
-											<InfoIcon />
-										</IconButton>
-									}
-								/>
-							</GridListTile>
-						);
-					})
+					<Spinner />
 				)}
 			</GridList>
 		</div>

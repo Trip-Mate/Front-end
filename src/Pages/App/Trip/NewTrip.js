@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 // Countries for the Autocomplete field
 import countriesWithID from '../../../countries';
@@ -11,9 +11,6 @@ import MomentUtils from '@date-io/moment';
 
 /* React Hook Form */
 import { useForm } from 'react-hook-form';
-
-/* React Hook Form DevTools to help debug forms with validation. */
-import { DevTool } from '@hookform/devtools';
 
 /* Material UI core*/
 import {
@@ -120,7 +117,7 @@ function NewTrip(props) {
 
 	const duration = tripDurationInDays(fromDate, toDate);
 
-	const { register, errors, handleSubmit, control, watch } = useForm({
+	const { register, errors, handleSubmit } = useForm({
 		mode: 'onSubmit',
 		reValidateMode: 'all',
 		defaultValues: {
