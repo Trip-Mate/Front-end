@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Spinner from '../../../components/Spinner/Spinner';
+import { Link, useHistory } from 'react-router-dom';
 
 
 import axios from 'axios';
 
-import { Link, useHistory } from 'react-router-dom';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 /* Components */
+import Spinner from '../../../components/Spinner/Spinner';
+// Material UI components
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -206,7 +206,12 @@ const SingleTrip = ({ match }) => {
 				</ListItemAvatar>
 				<ListItemText primary='Travellers' secondary={name} />
 			</ListItem>
-			<ListItem>
+			<ListItem
+				button
+				component={Link}
+				to={`${match.url}/notes`}
+				onClick={onDataSubmit}
+			>
 				<ListItemAvatar>
 					<Avatar>
 						<EventNoteIcon />
@@ -254,7 +259,9 @@ const SingleTrip = ({ match }) => {
 				</ListItemAvatar>
 				<ListItemText
 					primary='Wallet'
-					secondary={baseCurrency && budget ? `${baseCurrency} ${budget}` : null}
+					secondary={
+						baseCurrency && budget ? `${baseCurrency} ${budget}` : null
+					}
 				/>
 			</ListItem>
 			<ListItem className={classes.button} button={true}>
@@ -305,7 +312,9 @@ const SingleTrip = ({ match }) => {
 				)}
 			</ListItem>
 		</List>
-	) : <Spinner />
+	) : (
+		<Spinner />
+	);
 }
 
 
