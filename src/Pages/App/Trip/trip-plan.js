@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 
 import axios from 'axios';
+import Spinner from '../../../components/Spinner/Spinner';
 
 /* Material UI */
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 // DayComponent needs to be implemented
-// import Day from '../../../components/Day/Day.component';
+import Day from '../../../components/Day/Day.component';
 
 const useStyles = makeStyles(() => ({
 	root: {
@@ -26,7 +27,8 @@ const TripPlan = ({ match }) => {
 	const [ loading, setLoading] = useState(true);
 	const [ error, setError ] = useState(false);
 	const [ days, setDays] = useState([]);
-	const [ hasMore, setHasMore ] = useState(true);
+	const [hasMore, setHasMore] = useState(true);
+	const [isLoaded, setIsLoaded] = useState(false);
 
 	const observer = useRef();
 	const lastDayElementRef = useCallback(node => {
@@ -85,6 +87,7 @@ const TripPlan = ({ match }) => {
 				/* Checking if there are days left to be loaded */
 				setHasMore(res.data.days.length > count)
 				setLoading(false)
+				setIsLoaded(true);
 
 			} catch (error) {
 				setError(true)
@@ -92,34 +95,39 @@ const TripPlan = ({ match }) => {
 			}
 			return () => cancel()
 		})();
-	}, [count]);
+	}, [count, match.params.id]);
 	
 	console.log('Has More', hasMore)
 
-    return(
-
-		<Container
-		className={classes.root}
-		maxWidth="sm"
-		>
-			{
-				!days?.length > 0 ? (
-					<h2>There are no days in here</h2>
+    return (
+			<Container className={classes.root} maxWidth='sm'>
+				{isLoaded ? (
+					!days?.length > 0 ? (
+						<h2>There are no days in here</h2>
+					) : (
+						days
+							.filter((day, index) => index < count)
+							.map((day, index) => {
+								if (count === index + 1) {
+									return (
+										<Day key={day} ref={lastDayElementRef} index={index}>
+											{index}
+										</Day>
+									);
+								} else {
+									return (
+										<Day key={day} index={index}>
+											{index}
+										</Day>
+									);
+								}
+							})
+					)
 				) : (
-					days
-					.filter((day, index) => index < count)
-					.map((day, index) => {
-						if ( count === index+1 ) {
-							return <Day key={day} ref={lastDayElementRef} index={index}>{index}</Day>
-						} else {
-							return <Day key={day} index={index}>{index}</Day>
-						}
-					})
-				)
-				 
-			}
-		</Container>
-    )
+					<Spinner />
+				)}
+			</Container>
+		);
 };
 
 export default TripPlan;
