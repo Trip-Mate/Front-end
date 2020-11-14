@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(2),
 	},
 	iconContainer: {
-		marginTop: theme.spacing(2),
+		marginTop: theme.spacing(1),
 		display: 'flex',
 		justifyContent: 'flex-end',
 	},
@@ -48,19 +48,48 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const QuickNotes = ({ match }) => {
+const QuickNotes = (props) => {
+	const tripID = props.match.params.id;
+	/* getting user token */
+	const user = JSON.parse(localStorage.getItem('user'));
+	const token = user.token;
 	const classes = useStyles();
-	const [notes, setNotes] = useState(null)
-	const [isLoaded, setIsLoaded] = useState(false)
+	const [notes, setNotes] = useState(null);
+	const [isLoaded, setIsLoaded] = useState(false);
+
+	const createNoteHandler = () => {
+		props.history.push({
+			pathname: `/trips/${tripID}/notes/new`,
+		});
+	};
+
+	const deleteNoteHandler = async (event, key) => {
+		console.log(key);
+		try {
+			const newNotes = notes.filter((note) => {
+				return note._id !== key;
+			});
+			const oldNotes = notes;
+			setNotes(newNotes);
+
+			const res = await axios.delete(`/trips/${tripID}/notes/${key}`, {
+				headers: {
+					'x-auth-token': token,
+				},
+			});
+
+			if (res.status !== 200) {
+				setNotes(oldNotes)
+			}
+			
+		} catch (error) {
+			console.log('Error', error.message);
+		}
+	};
 
 	useEffect(() => {
 		(async () => {
 			try {
-				/* getting user token */
-				const user = JSON.parse(localStorage.getItem('user'));
-				const token = user.token;
-				const tripID = match.params.id;
-
 				/* getting authorized response */
 				const res = await axios.get(`/trips/${tripID}/notes`, {
 					headers: {
@@ -76,18 +105,22 @@ const QuickNotes = ({ match }) => {
 				console.log('Notes Data', notes);
 
 				/* passing days Ids to Use State Days*/
-				setNotes(notes)
+				setNotes(notes);
 				setIsLoaded(true);
-
 			} catch (error) {
 				console.log('Error', error.message);
 			}
 		})();
-}, [match.params.id, setNotes]);
+	}, [setNotes, token, tripID]);
 
 	return (
 		<Container className={classes.container}>
-			<Fab color='secondary' aria-label='add' className={classes.fab}>
+			<Fab
+				color='secondary'
+				aria-label='add'
+				className={classes.fab}
+				onClick={() => createNoteHandler()}
+			>
 				<AddIcon />
 			</Fab>
 			{isLoaded ? (
@@ -109,7 +142,11 @@ const QuickNotes = ({ match }) => {
 									<IconButton aria-label='edit' color='primary'>
 										<EditIcon fontSize='large' />
 									</IconButton>
-									<IconButton aria-label='delete' color='secondary'>
+									<IconButton
+										aria-label='delete'
+										color='secondary'
+										onClick={(event, key) => deleteNoteHandler(event, note._id)}
+									>
 										<DeleteIcon fontSize='large' />
 									</IconButton>
 								</div>
