@@ -20,7 +20,7 @@ const Reset = lazy(() => import('./Pages/Website/User/Reset/Reset'));
 const Profile = lazy(() => import('./Pages/Website/User/Profile/Profile'));
 const Overview = lazy(() => import('./Pages/App/Overview/Overview'));
 const NewTrip = lazy(() => import('./Pages/App/Trip/NewTrip'));
-const MyTrips = lazy(() => import('./Pages/App/Trip/my-trips'))
+const MyTrips = lazy(() => import('./Pages/App/Trip/my-trips'));
 
 // Route variables
 // Website variables
