@@ -63,8 +63,18 @@ const QuickNotes = (props) => {
 		});
 	};
 
+	const editNoteHandler = (event, noteID) => {
+
+		const note = notes.find(e => e._id === noteID)
+
+		props.history.push({
+			pathname: `/trips/${tripID}/notes/edit`,
+			state: {note}
+		});
+	}
+
 	const deleteNoteHandler = async (event, key) => {
-		console.log(key);
+
 		try {
 			const newNotes = notes.filter((note) => {
 				return note._id !== key;
@@ -102,7 +112,6 @@ const QuickNotes = (props) => {
 
 				/* getting notes */
 				const notes = await res.data.notes;
-				console.log('Notes Data', notes);
 
 				/* passing days Ids to Use State Days*/
 				setNotes(notes);
@@ -127,7 +136,7 @@ const QuickNotes = (props) => {
 				!notes?.length > 0 ? (
 					<h2>There are no notes here!</h2>
 				) : (
-					notes.map((note, idx) => (
+					notes.map((note) => (
 						<Grid item xs={12} sm={12} key={note._id}>
 							<Paper className={classes.paper}>
 								<div className={classes.headerContainer}>
@@ -139,13 +148,17 @@ const QuickNotes = (props) => {
 									{note.note}
 								</Typography>
 								<div className={classes.iconContainer}>
-									<IconButton aria-label='edit' color='primary'>
+									<IconButton
+										aria-label='edit'
+										color='primary'
+										onClick={(event) => editNoteHandler(event, note._id)}
+									>
 										<EditIcon fontSize='large' />
 									</IconButton>
 									<IconButton
 										aria-label='delete'
 										color='secondary'
-										onClick={(event, key) => deleteNoteHandler(event, note._id)}
+										onClick={(event) => deleteNoteHandler(event, note._id)}
 									>
 										<DeleteIcon fontSize='large' />
 									</IconButton>

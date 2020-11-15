@@ -57,59 +57,56 @@ const useStyles = makeStyles((theme) => ({
 	},
 	inputFields: {
 		margin: theme.spacing(0.5, 0),
-  },
-  multiline: {
-    marginTop: theme.spacing(2),
-  }
+	},
+	multiline: {
+		marginTop: theme.spacing(2),
+	},
 }));
 
 function NewNote( props ) {
-
-  	const [isSuccess, setIsSuccess] = React.useState(false);
+	const [isSuccess, setIsSuccess] = React.useState(false);
   const classes = useStyles();
-  
-  	const { register, errors, handleSubmit } = useForm({
-			mode: 'onSubmit',
-			reValidateMode: 'all',
-			defaultValues: {
-				// TODO: Add user here from the state here
-				title: '',
-				note: ''
-			},
-    });
-  
-  const onSubmit = async (data) => {
+  const note = props.location.state.note
 
-    const user = JSON.parse(localStorage.getItem('user'));
+	const { register, errors, handleSubmit } = useForm({
+		mode: 'onSubmit',
+		reValidateMode: 'all',
+		defaultValues: {
+			title: `${note.title}`,
+			note: `${note.note}`,
+		},
+	});
+
+	const onSubmit = async (data) => {
+		const user = JSON.parse(localStorage.getItem('user'));
 		const token = user.token;
 		const tripID = props.match.params.id;
 		// Data to be sent to the server
-    const note = {
-      title: data.title,
-      note: data.note,
-  }
+		const updatedNote = {
+			title: data.title,
+			note: data.note,
+		};
 
 		try {
-
-			const res = await axios.post(`/trips/${tripID}/notes`, note, {
-					headers: {
-						'x-auth-token': token,
-					}
+			const res = await axios.patch(`/trips/${tripID}/notes/${note._id}`, updatedNote, {
+				headers: {
+					'x-auth-token': token,
+				},
       });
 
-      if (res) {
-        setIsSuccess(true);
+			if (res.status === 200) {
+				setIsSuccess(true);
 
-        props.history.push({
+				props.history.push({
 					pathname: `/trips/${tripID}/notes`,
 				});
       }
-      
+    
 		} catch (error) {
 			console.log(error);
 		}
 	};
-  return (
+	return (
 		<Container component='main' maxWidth='xs'>
 			<Paper elevation={3} className={classes.paper}>
 				{isSuccess ? (
@@ -149,8 +146,8 @@ function NewNote( props ) {
 						</Alert>
 					)}
 					{/* Note description */}
-          <TextField
-            className={classes.multiline}
+					<TextField
+						className={classes.multiline}
 						multiline
 						rows={8}
 						variant='outlined'
@@ -178,7 +175,7 @@ function NewNote( props ) {
 							color='primary'
 							className={classes.submit}
 						>
-							Create Note
+							Edit Note
 						</Button>
 					) : null}
 				</form>
@@ -187,4 +184,4 @@ function NewNote( props ) {
 	);
 }
 
-export default NewNote
+export default NewNote;

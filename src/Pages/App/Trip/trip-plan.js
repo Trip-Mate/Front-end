@@ -33,7 +33,7 @@ const TripPlan = ({ match }) => {
 
 					/* getting trip days */
 					const daysIDs = await res.data;
-					console.log('Days Data', daysIDs);
+					// console.log('Days Data', daysIDs);
 
 					/* passing days Ids to Use State Days*/
 					setSingleTrip(daysIDs);
@@ -44,7 +44,7 @@ const TripPlan = ({ match }) => {
 			})();
 		}, [match.params.id, setSingleTrip]);
 
-	console.log('Days Context', days);
+	// console.log('Days Context', days);
     
     return (
 			/* Demo Container */
