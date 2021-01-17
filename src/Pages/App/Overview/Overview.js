@@ -142,7 +142,7 @@ function Overview() {
 				</div>
 				<div className={classes.mainDiv}>
 					<div className={classes.icons}>
-						<NavLink className={classes.link} to={HomeRoute}>
+						<NavLink className={classes.link} to={ContactRoute}>
 							<AssignmentIndIcon fontSize='large' className={classes.hover} />
 						</NavLink>
 					</div>
@@ -152,7 +152,7 @@ function Overview() {
 				</div>
 				<div className={classes.mainDiv}>
 					<div className={classes.icons}>
-						<NavLink className={classes.link} to={ContactRoute}>
+						<NavLink className={classes.link} to={HomeRoute}>
 							<ShareIcon fontSize='large' className={classes.hover} />
 						</NavLink>
 					</div>
